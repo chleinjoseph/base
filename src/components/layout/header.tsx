@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Sprout } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -51,10 +51,14 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left">
-                <Link href="/" className="flex items-center space-x-2">
-                  <Sprout className="h-6 w-6 text-primary" />
-                  <span className="font-bold font-headline">TaxForward Summit</span>
-                </Link>
+                <SheetHeader className="border-b pb-4">
+                  <SheetTitle>
+                    <Link href="/" className="flex items-center space-x-2">
+                      <Sprout className="h-6 w-6 text-primary" />
+                      <span className="font-bold font-headline">TaxForward Summit</span>
+                    </Link>
+                  </SheetTitle>
+                </SheetHeader>
                 <div className="flex flex-col space-y-4 mt-6">
                   {navItems.map((item) => (
                     <Link
