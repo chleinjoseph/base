@@ -1,5 +1,6 @@
 "use client";
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -40,7 +41,7 @@ function SummarizeButton() {
 
 export default function AdminPage() {
     const initialState = { summary: null, error: null };
-    const [state, dispatch] = useFormState(handleSummarizeContent, initialState);
+    const [state, dispatch] = useActionState(handleSummarizeContent, initialState);
     const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {

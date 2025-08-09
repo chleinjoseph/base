@@ -1,6 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 import { handlePartnershipForm } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,7 +25,7 @@ function SubmitButton() {
 
 export default function PartnershipsPage() {
   const initialState = { message: null, errors: {}, success: false };
-  const [state, dispatch] = useFormState(handlePartnershipForm, initialState);
+  const [state, dispatch] = useActionState(handlePartnershipForm, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
 
