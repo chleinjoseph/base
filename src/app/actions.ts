@@ -3,6 +3,7 @@
 import { taxPolicyFAQChatbot, summarizeSummitContent } from "@/ai/flows";
 import { z } from "zod";
 import clientPromise from "@/lib/mongodb";
+import { partnershipInquiry } from "@/lib/types";
 
 const partnershipSchema = z.object({
   name: z.string().min(2, "Name is required."),
@@ -24,6 +25,7 @@ export async function handlePartnershipForm(prevState: any, formData: FormData) 
       return {
         errors: validatedFields.error.flatten().fieldErrors,
         message: "Please correct the errors below.",
+        success: false
       };
     }
 
@@ -38,9 +40,29 @@ export async function handlePartnershipForm(prevState: any, formData: FormData) 
     return { message: "Thank you for your inquiry! We will be in touch shortly.", errors: {}, success: true };
   } catch (e) {
     console.error(e);
-    return { message: "An unexpected error occurred. Please try again.", errors: {} };
+    return { message: "An unexpected error occurred. Please try again.", errors: {}, success: false };
   }
 }
+
+export async function getRecentPartnerships(): Promise<partnershipInquiry[]> {
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const partnerships = await db.collection("partnership_inquiries")
+            .find({})
+            .sort({ createdAt: -1 })
+            .limit(10)
+            .toArray();
+
+        // The data from MongoDB includes an _id field which is an ObjectId.
+        // We need to convert it to a string to be able to pass it to the client component.
+        return partnerships.map(p => ({ ...p, _id: p._id.toString() })) as partnershipInquiry[];
+    } catch(e) {
+        console.error("Failed to fetch partnerships", e);
+        return [];
+    }
+}
+
 
 export async function askChatbot(query: string): Promise<string> {
   if (!query) {

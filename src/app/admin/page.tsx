@@ -7,8 +7,10 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Handshake, FileText, Users, MessageSquare, Loader2 } from "lucide-react"
-import { handleSummarizeContent } from '../actions';
-import { useEffect, useRef } from 'react';
+import { handleSummarizeContent, getRecentPartnerships } from '../actions';
+import { useEffect, useRef, useState } from 'react';
+import { partnershipInquiry } from '@/lib/types';
+import { format } from 'date-fns';
 
 const SummaryCard = ({ title, value, icon: Icon, change }: { title: string, value: string, icon: React.ElementType, change: string }) => (
   <Card>
@@ -23,13 +25,6 @@ const SummaryCard = ({ title, value, icon: Icon, change }: { title: string, valu
   </Card>
 );
 
-const recentPartners = [
-    { name: 'Fintech Corp', tier: 'Gold', status: 'Approved', date: '2023-10-26' },
-    { name: 'Global NGO United', tier: 'Silver', status: 'Pending', date: '2023-10-25' },
-    { name: 'Innovate Solutions', tier: 'Platinum', status: 'Approved', date: '2023-10-24' },
-    { name: 'GovDepart of Tech', tier: 'Gold', status: 'Contacted', date: '2023-10-23' },
-];
-
 function SummarizeButton() {
   const { pending } = useFormStatus();
   return (
@@ -43,12 +38,24 @@ export default function AdminPage() {
     const initialState = { summary: null, error: null };
     const [state, dispatch] = useActionState(handleSummarizeContent, initialState);
     const formRef = useRef<HTMLFormElement>(null);
+    const [partnerships, setPartnerships] = useState<partnershipInquiry[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if(state.summary) {
             formRef.current?.reset();
         }
     }, [state.summary]);
+    
+    useEffect(() => {
+        async function loadPartnerships() {
+            setLoading(true);
+            const fetchedPartnerships = await getRecentPartnerships();
+            setPartnerships(fetchedPartnerships);
+            setLoading(false);
+        }
+        loadPartnerships();
+    }, []);
 
   return (
     <div className="space-y-6">
@@ -66,30 +73,30 @@ export default function AdminPage() {
             <CardDescription>Track and manage new partnership requests.</CardDescription>
           </CardHeader>
           <CardContent>
+             {loading ? (
+                <p>Loading inquiries...</p>
+            ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Company</TableHead>
-                  <TableHead>Tier</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>Company / Name</TableHead>
+                  <TableHead>Email</TableHead>
                   <TableHead>Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recentPartners.map(partner => (
-                  <TableRow key={partner.name}>
-                    <TableCell className="font-medium">{partner.name}</TableCell>
+                {partnerships.map(partner => (
+                  <TableRow key={partner._id.toString()}>
+                    <TableCell className="font-medium">{partner.company || partner.name}</TableCell>
                     <TableCell>
-                      <Badge variant={partner.tier === 'Platinum' ? 'default' : partner.tier === 'Gold' ? 'secondary' : 'outline'}>{partner.tier}</Badge>
+                      {partner.email}
                     </TableCell>
-                    <TableCell>
-                       <Badge variant={partner.status === 'Approved' ? 'default' : 'destructive'} className={partner.status === 'Approved' ? 'bg-green-600' : partner.status === 'Pending' ? 'bg-yellow-500' : 'bg-blue-500'}>{partner.status}</Badge>
-                    </TableCell>
-                    <TableCell>{partner.date}</TableCell>
+                    <TableCell>{format(new Date(partner.createdAt), 'PP')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
+            )}
           </CardContent>
         </Card>
 
