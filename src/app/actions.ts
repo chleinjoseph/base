@@ -2,6 +2,7 @@
 
 import { taxPolicyFAQChatbot, summarizeSummitContent } from "@/ai/flows";
 import { z } from "zod";
+import clientPromise from "@/lib/mongodb";
 
 const partnershipSchema = z.object({
   name: z.string().min(2, "Name is required."),
@@ -26,11 +27,17 @@ export async function handlePartnershipForm(prevState: any, formData: FormData) 
       };
     }
 
-    // Here you would typically send this data to Firebase Firestore, send an email, etc.
-    console.log("Partnership inquiry:", validatedFields.data);
+    const client = await clientPromise;
+    const db = client.db("TaxForwardSummit");
+    await db.collection("partnership_inquiries").insertOne({
+      ...validatedFields.data,
+      createdAt: new Date(),
+    });
+
 
     return { message: "Thank you for your inquiry! We will be in touch shortly.", errors: {}, success: true };
   } catch (e) {
+    console.error(e);
     return { message: "An unexpected error occurred. Please try again.", errors: {} };
   }
 }

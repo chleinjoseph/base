@@ -38,6 +38,15 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
+             <Link
+                href="/admin"
+                className={cn(
+                  "transition-colors hover:text-foreground/80",
+                  pathname === "/admin" ? "text-foreground" : "text-foreground/60"
+                )}
+              >
+                Admin
+              </Link>
           </nav>
         </div>
         
@@ -72,6 +81,15 @@ export function Header() {
                       {item.label}
                     </Link>
                   ))}
+                   <Link
+                      href="/admin"
+                      className={cn(
+                        "text-lg",
+                        pathname === "/admin" ? "text-primary font-semibold" : "text-muted-foreground"
+                      )}
+                    >
+                      Admin
+                    </Link>
                 </div>
               </SheetContent>
             </Sheet>
@@ -84,7 +102,7 @@ export function Header() {
 
           <nav className="flex items-center">
             <Button asChild>
-              <Link href="/admin">Admin Dashboard</Link>
+              <Link href="/login">Sign In</Link>
             </Button>
           </nav>
         </div>
