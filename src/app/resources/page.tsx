@@ -3,29 +3,31 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Download, Search } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function ResourcesPage() {
   return (
     <div className="container py-12 md:py-16">
       <div className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-primary font-headline">Resource Library</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-primary font-headline">Blog & Insights</h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Access exclusive whitepapers, case studies, and video content curated by the experts at SERLEO GLOBALS.
+          Empowering content, business tips, and creative growth tools from the Serleo Globals team and community.
         </p>
       </div>
       
       <div className="mt-12 max-w-2xl mx-auto">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-          <Input placeholder="Search resources..." className="pl-10" />
+          <Input placeholder="Search articles..." className="pl-10" />
         </div>
         <div className="flex justify-center gap-2 mt-4">
             <Button variant="secondary">All</Button>
-            <Button variant="ghost">Whitepapers</Button>
-            <Button variant="ghost">Videos</Button>
-            <Button variant="ghost">Case Studies</Button>
+            <Button variant="ghost">Business</Button>
+            <Button variant="ghost">Creativity</Button>
+            <Button variant="ghost">Wellness</Button>
+            <Button variant="ghost">Finance</Button>
         </div>
       </div>
       
@@ -52,9 +54,10 @@ export default function ResourcesPage() {
                 <p className="text-muted-foreground">{resource.description}</p>
               </CardContent>
               <CardFooter className="px-6 pb-6">
-                <Button className="w-full">
-                  <Download className="mr-2 h-4 w-4" />
-                  {resource.type === 'Video' ? 'Watch Now' : 'Download'}
+                <Button asChild className="w-full">
+                  <Link href="#">
+                    Read More <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
                 </Button>
               </CardFooter>
             </Card>

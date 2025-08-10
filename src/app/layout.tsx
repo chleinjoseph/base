@@ -19,8 +19,8 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: 'TaxForward Summit',
-  description: 'A digital hub for reshaping the future of taxation through discussions, partnerships, and thought leadership, powered by SERLEO GLOBALS.',
+  title: 'Serleo Globals - Empowering Youth Through Creative Enterprise',
+  description: 'Serleo Globals is a multidimensional youth empowerment company transforming lives through creativity, entrepreneurship, health, and innovation.',
 };
 
 export default function RootLayout({

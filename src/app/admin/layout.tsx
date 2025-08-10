@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Handshake, LayoutDashboard, FileText, Users, Bot, Sprout, LogOut } from "lucide-react";
+import { Handshake, LayoutDashboard, FileText, Users, Bot, Sprout, LogOut, Rss } from "lucide-react";
 import Link from 'next/link';
 
 export default function AdminLayout({
@@ -26,7 +26,7 @@ export default function AdminLayout({
         <SidebarHeader>
           <div className="flex items-center gap-2">
             <Sprout className="h-6 w-6 text-primary" />
-            <span className="font-bold font-headline text-lg">TaxForward Admin</span>
+            <span className="font-bold font-headline text-lg">Serleo Admin</span>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -37,13 +37,13 @@ export default function AdminLayout({
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Content">
-                <Link href="#"><FileText /><span>Content</span></Link>
+              <SidebarMenuButton asChild tooltip="Collaborations">
+                <Link href="#"><Handshake /><span>Collaborations</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Partnerships">
-                <Link href="#"><Handshake /><span>Partnerships</span></Link>
+              <SidebarMenuButton asChild tooltip="Blog Posts">
+                <Link href="#"><Rss /><span>Blog Posts</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>

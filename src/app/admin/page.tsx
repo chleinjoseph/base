@@ -60,17 +60,17 @@ export default function AdminPage() {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <SummaryCard title="Total Partnerships" value="78" icon={Handshake} change="+5 this month" />
-        <SummaryCard title="New Resources" value="12" icon={FileText} change="+3 this week" />
+        <SummaryCard title="Total Collaborations" value="78" icon={Handshake} change="+5 this month" />
+        <SummaryCard title="New Blog Posts" value="12" icon={FileText} change="+3 this week" />
         <SummaryCard title="Active Users" value="1,245" icon={Users} change="+10% since last month" />
-        <SummaryCard title="Forum Posts Today" value="89" icon={MessageSquare} change="25 new threads" />
+        <SummaryCard title="New Inquiries" value="89" icon={MessageSquare} change="25 new threads" />
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
         <Card className="lg:col-span-4">
           <CardHeader>
-            <CardTitle>Recent Partnership Inquiries</CardTitle>
-            <CardDescription>Track and manage new partnership requests.</CardDescription>
+            <CardTitle>Recent Collaboration Inquiries</CardTitle>
+            <CardDescription>Track and manage new collaboration requests.</CardDescription>
           </CardHeader>
           <CardContent>
              {loading ? (
@@ -79,7 +79,7 @@ export default function AdminPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Company / Name</TableHead>
+                  <TableHead>Organization / Name</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Date</TableHead>
                 </TableRow>
@@ -103,7 +103,7 @@ export default function AdminPage() {
         <Card className="lg:col-span-3">
             <CardHeader>
                 <CardTitle>AI Content Summarizer</CardTitle>
-                <CardDescription>Paste content from transcripts or documents to generate a concise summary.</CardDescription>
+                <CardDescription>Paste content from articles or documents to generate a concise summary.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <form action={dispatch} ref={formRef} className="space-y-4">

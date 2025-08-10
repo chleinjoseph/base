@@ -8,10 +8,10 @@ import { Menu, Sprout } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: '/summit-info', label: 'Summit Info' },
-  { href: '/partnerships', label: 'Partnerships' },
-  { href: '/forum', label: 'Forum' },
-  { href: '/resources', label: 'Resources' },
+  { href: '/#about', label: 'About' },
+  { href: '/#sectors', label: 'Sectors' },
+  { href: '/collaborate', label: 'Collaborate' },
+  { href: '/blog', label: 'Blog' },
 ];
 
 export function Header() {
@@ -23,7 +23,7 @@ export function Header() {
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <Sprout className="h-6 w-6 text-primary" />
-            <span className="font-bold font-headline text-lg">TaxForward Summit</span>
+            <span className="font-bold font-headline text-lg">Serleo Globals</span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             {navItems.map((item) => (
@@ -61,12 +61,12 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="left">
                 <SheetHeader className="border-b pb-4">
-                  <SheetTitle>
-                    <Link href="/" className="flex items-center space-x-2">
-                      <Sprout className="h-6 w-6 text-primary" />
-                      <span className="font-bold font-headline">TaxForward Summit</span>
-                    </Link>
-                  </SheetTitle>
+                    <SheetTitle>
+                        <Link href="/" className="flex items-center space-x-2">
+                        <Sprout className="h-6 w-6 text-primary" />
+                        <span className="font-bold font-headline">Serleo Globals</span>
+                        </Link>
+                    </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col space-y-4 mt-6">
                   {navItems.map((item) => (
@@ -97,7 +97,7 @@ export function Header() {
           
           <Link href="/" className="flex items-center space-x-2 md:hidden">
             <Sprout className="h-5 w-5 text-primary" />
-            <span className="font-bold font-headline">TaxForward</span>
+            <span className="font-bold font-headline">Serleo Globals</span>
           </Link>
 
           <nav className="flex items-center">
