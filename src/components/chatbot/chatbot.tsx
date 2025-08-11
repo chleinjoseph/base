@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Paperclip, Send, Bot, User, Loader2 } from "lucide-react";
+import { Send, Bot, User, Loader2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription, SheetFooter } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { askChatbot } from "@/app/actions";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +21,28 @@ export function Chatbot() {
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
+  // Load chat history from localStorage on initial render
+  useEffect(() => {
+    try {
+        const storedMessages = localStorage.getItem("chatHistory");
+        if (storedMessages) {
+            setMessages(JSON.parse(storedMessages));
+        }
+    } catch (error) {
+        console.error("Failed to parse chat history from localStorage", error);
+        localStorage.removeItem("chatHistory");
+    }
+  }, []);
+
+  // Save chat history to localStorage whenever it changes
+  useEffect(() => {
+    if (messages.length > 0) {
+        localStorage.setItem("chatHistory", JSON.stringify(messages));
+    } else {
+        localStorage.removeItem("chatHistory");
+    }
+  }, [messages]);
+  
   useEffect(() => {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({
@@ -29,6 +51,11 @@ export function Chatbot() {
       });
     }
   }, [messages]);
+
+  const handleClearChat = () => {
+    setMessages([]);
+    localStorage.removeItem("chatHistory");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,10 +91,20 @@ export function Chatbot() {
       </SheetTrigger>
       <SheetContent className="flex flex-col">
         <SheetHeader>
-          <SheetTitle>Serleo Assistant</SheetTitle>
-          <SheetDescription>
-            Ask me anything about Serleo Globals. I'm here to help!
-          </SheetDescription>
+            <div className="flex justify-between items-center">
+                <div>
+                    <SheetTitle>Serleo Assistant</SheetTitle>
+                    <SheetDescription>
+                        Ask me anything about Serleo Globals.
+                    </SheetDescription>
+                </div>
+                 {messages.length > 0 && (
+                    <Button variant="ghost" size="icon" onClick={handleClearChat}>
+                        <Trash2 className="h-4 w-4" />
+                        <span className="sr-only">Clear Chat</span>
+                    </Button>
+                 )}
+            </div>
         </SheetHeader>
         <ScrollArea className="flex-1 pr-4 -mr-6" ref={scrollAreaRef}>
           <div className="space-y-6 p-2">
