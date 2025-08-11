@@ -1,6 +1,6 @@
 "use server";
 
-import { taxPolicyFAQChatbot, summarizeSummitContent } from "@/ai/flows";
+import { serleoAssistant, summarizeSummitContent } from "@/ai/flows";
 import { z } from "zod";
 import clientPromise from "@/lib/mongodb";
 import { partnershipInquiry, User } from "@/lib/types";
@@ -85,7 +85,7 @@ export async function askChatbot(query: string): Promise<string> {
     return "Please provide a query.";
   }
   try {
-    const result = await taxPolicyFAQChatbot({ query });
+    const result = await serleoAssistant({ query });
     return result.answer;
   } catch (error) {
     console.error("Chatbot error:", error);

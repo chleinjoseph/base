@@ -59,14 +59,14 @@ export function Chatbot() {
           size="icon"
         >
           <Bot className="h-8 w-8" />
-          <span className="sr-only">Open Tax Policy Chatbot</span>
+          <span className="sr-only">Open Serleo Assistant</span>
         </Button>
       </SheetTrigger>
       <SheetContent className="flex flex-col">
         <SheetHeader>
-          <SheetTitle>Tax Policy AI Assistant</SheetTitle>
+          <SheetTitle>Serleo Assistant</SheetTitle>
           <SheetDescription>
-            Ask me anything about tax policy. Powered by SERLEO GLOBALS AI.
+            Ask me anything about Serleo Globals. I'm here to help!
           </SheetDescription>
         </SheetHeader>
         <ScrollArea className="flex-1 pr-4 -mr-6" ref={scrollAreaRef}>
