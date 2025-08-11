@@ -42,6 +42,12 @@ export default function PartnershipsPage() {
         description: state.message,
         variant: "destructive",
       });
+    } else if (state.message && !state.success) {
+         toast({
+            title: "Error",
+            description: state.message,
+            variant: "destructive",
+        });
     }
   }, [state, toast]);
 

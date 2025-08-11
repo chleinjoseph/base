@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: '/#about', label: 'About' },
   { href: '/#sectors', label: 'Sectors' },
-  { href: '/collaborate', label: 'Collaborate' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/partnerships', label: 'Collaborate' },
+  { href: '/resources', label: 'Blog' },
 ];
 
 export function Header() {
