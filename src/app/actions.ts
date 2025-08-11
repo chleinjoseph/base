@@ -3,9 +3,10 @@
 import { serleoAssistant, summarizeSummitContent } from "@/ai/flows";
 import { z } from "zod";
 import clientPromise from "@/lib/mongodb";
-import { partnershipInquiry, User } from "@/lib/types";
+import { partnershipInquiry, User, Post } from "@/lib/types";
 import bcrypt from "bcryptjs";
 import { redirect } from 'next/navigation';
+import { revalidatePath } from "next/cache";
 
 const partnershipSchema = z.object({
   name: z.string().min(2, "Name is required."),
@@ -29,6 +30,18 @@ const loginSchema = z.object({
     password: z.string().min(1, "Password is required."),
 });
 
+const postSchema = z.object({
+    title: z.string().min(5, 'Title must be at least 5 characters.'),
+    type: z.string().min(3, 'Type must be at least 3 characters.'),
+    description: z.string().min(10, 'Description must be at least 10 characters.'),
+    imageUrl: z.string().url('Please enter a valid image URL.'),
+    aiHint: z.string().min(3, 'AI Hint must be at least 3 characters.'),
+});
+
+interface ChatMessage {
+    role: 'user' | 'bot';
+    content: string;
+}
 
 export async function handlePartnershipForm(prevState: any, formData: FormData) {
   try {
@@ -80,12 +93,17 @@ export async function getRecentPartnerships(): Promise<partnershipInquiry[]> {
 }
 
 
-export async function askChatbot(query: string): Promise<string> {
+export async function askChatbot(query: string, history: ChatMessage[]): Promise<string> {
   if (!query) {
     return "Please provide a query.";
   }
   try {
-    const result = await serleoAssistant({ query });
+    const aiHistory = history.map(msg => ({
+        role: msg.role === 'bot' ? 'model' : 'user',
+        content: msg.content
+    }));
+
+    const result = await serleoAssistant({ query, history: aiHistory });
     return result.answer;
   } catch (error) {
     console.error("Chatbot error:", error);
@@ -138,7 +156,6 @@ export async function handleSignUp(prevState: any, formData: FormData) {
         const hashedPassword = await bcrypt.hash(password, 10);
         
         await usersCollection.insertOne({
-            _id: undefined,
             name,
             email,
             password: hashedPassword,
@@ -198,5 +215,121 @@ export async function handleLogin(prevState: any, formData: FormData) {
     } else {
         // Redirect to a user dashboard if it exists, or home for now.
         redirect('/');
+    }
+}
+
+async function seedPosts() {
+    const client = await clientPromise;
+    const db = client.db("TaxForwardSummit");
+    const postsCollection = db.collection("posts");
+    const count = await postsCollection.countDocuments();
+    if (count === 0) {
+        console.log("Seeding initial posts...");
+        const initialPosts = [
+          {
+            title: '5 Steps to Validate Your Startup Idea',
+            type: 'Business',
+            description: 'A practical guide to testing your business concept before you build.',
+            imageUrl: 'https://placehold.co/600x400.png',
+            aiHint: 'startup blueprint'
+          },
+          {
+            title: 'The Art of Financial Freedom: A Youth Guide',
+            type: 'Finance',
+            description: 'Learn the fundamentals of budgeting, saving, and investing for a secure future.',
+            imageUrl: 'https://placehold.co/600x400.png',
+            aiHint: 'financial planning'
+          },
+          {
+            title: 'Unlocking Creativity: Overcoming Creative Blocks',
+            type: 'Creativity',
+            description: 'Techniques and exercises to help you break through creative barriers and find your flow.',
+            imageUrl: 'https://placehold.co/600x400.png',
+            aiHint: 'artist thinking'
+          },
+            {
+            title: 'Mindfulness for Young Leaders',
+            type: 'Wellness',
+            description: 'Discover how mindfulness practices can improve focus, reduce stress, and enhance leadership.',
+            imageUrl: 'https://placehold.co/600x400.png',
+            aiHint: 'person meditating'
+          },
+          {
+            title: 'From Farm to Table: Youth in Agribusiness',
+            type: 'Business',
+            description: 'Exploring the opportunities for young entrepreneurs in the modern agricultural sector.',
+            imageUrl: 'https://placehold.co/600x400.png',
+            aiHint: 'modern agriculture'
+          },
+          {
+            title: 'Building Your Personal Brand as a Creative',
+            type: 'Creativity',
+            description: 'A workshop on how to market yourself and your art in the digital age.',
+            imageUrl: 'https://placehold.co/600x400.png',
+            aiHint: 'personal branding'
+          },
+        ];
+        await postsCollection.insertMany(initialPosts.map(p => ({...p, createdAt: new Date() })));
+    }
+}
+
+export async function getPosts(): Promise<Post[]> {
+    try {
+        await seedPosts(); // Seed database if empty
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const posts = await db.collection("posts")
+            .find({})
+            .sort({ createdAt: -1 })
+            .toArray();
+
+        return posts.map(p => ({ ...p, _id: p._id.toString() })) as Post[];
+    } catch (e) {
+        console.error("Failed to fetch posts", e);
+        return [];
+    }
+}
+
+export async function handleCreatePost(prevState: any, formData: FormData) {
+    const validatedFields = postSchema.safeParse(Object.fromEntries(formData.entries()));
+    
+    if(!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Please correct the errors.",
+            success: false,
+        };
+    }
+    
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        await db.collection("posts").insertOne({
+            ...validatedFields.data,
+            createdAt: new Date(),
+        });
+
+        revalidatePath('/resources');
+        revalidatePath('/admin/blog');
+        return { message: "Post created successfully.", errors: {}, success: true };
+    } catch (e) {
+        console.error(e);
+        return { message: "Failed to create post.", errors: {}, success: false };
+    }
+}
+
+export async function handleDeletePost(postId: string) {
+    try {
+        const { ObjectId } = await import('mongodb');
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        await db.collection("posts").deleteOne({ _id: new ObjectId(postId) });
+        
+        revalidatePath('/resources');
+        revalidatePath('/admin/blog');
+        return { message: "Post deleted successfully.", success: true };
+    } catch(e) {
+        console.error(e);
+        return { message: "Failed to delete post.", success: false };
     }
 }

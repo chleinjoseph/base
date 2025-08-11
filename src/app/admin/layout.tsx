@@ -43,7 +43,7 @@ export default function AdminLayout({
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Blog Posts">
-                <Link href="#"><Rss /><span>Blog Posts</span></Link>
+                <Link href="/admin/blog"><Rss /><span>Blog Posts</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>

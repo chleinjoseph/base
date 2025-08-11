@@ -62,12 +62,13 @@ export function Chatbot() {
     if (!input.trim() || isLoading) return;
 
     const userMessage: Message = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     setInput("");
     setIsLoading(true);
 
     try {
-      const result = await askChatbot(input);
+      const result = await askChatbot(input, messages); // Pass history
       const botMessage: Message = { role: "bot", content: result };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {

@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 export type partnershipInquiry = {
-    _id: ObjectId;
+    _id: string | ObjectId;
     name: string;
     email: string;
     company?: string;
@@ -10,10 +10,20 @@ export type partnershipInquiry = {
 }
 
 export type User = {
-    _id: ObjectId;
+    _id?: string | ObjectId;
     name: string;
     email: string;
     password?: string; // Hashed password
     role: 'user' | 'admin';
+    createdAt: Date;
+}
+
+export type Post = {
+    _id: string | ObjectId;
+    title: string;
+    type: string;
+    description: string;
+    imageUrl: string;
+    aiHint: string;
     createdAt: Date;
 }

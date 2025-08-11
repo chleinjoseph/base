@@ -13,6 +13,10 @@ import {z} from 'genkit';
 
 const SerleoAssistantInputSchema = z.object({
   query: z.string().describe('The user query about Serleo Globals.'),
+  history: z.array(z.object({
+    role: z.enum(['user', 'model']),
+    content: z.string(),
+  })).optional().describe('The conversation history.'),
 });
 export type SerleoAssistantInput = z.infer<typeof SerleoAssistantInputSchema>;
 
@@ -39,9 +43,21 @@ Your knowledge base includes:
 - Collaboration: We are open to partnerships, sponsorships, and creative collaborations. Inquiries can be made through the "Collaborate" page.
 - Tone: Visionary, bold, uplifting, and actionable.
 
-Answer the following user query based on this information:
+The user is having a conversation with you. Use the following history to understand the context.
+{{#if history}}
+Conversation History:
+{{#each history}}
+  {{#if (eq this.role 'user')}}
+User: {{{this.content}}}
+  {{else}}
+You: {{{this.content}}}
+  {{/if}}
+{{/each}}
+{{/if}}
 
-{{query}}`,
+Now, answer the following user query based on all the information you have:
+
+User: {{query}}`,
 });
 
 const serleoAssistantFlow = ai.defineFlow(

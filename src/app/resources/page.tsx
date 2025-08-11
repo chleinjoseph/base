@@ -1,4 +1,4 @@
-import { resources } from '@/lib/data';
+import { getPosts } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,7 +7,9 @@ import { ArrowRight, Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function ResourcesPage() {
+export default async function ResourcesPage() {
+  const resources = await getPosts();
+  
   return (
     <div className="container py-12 md:py-16">
       <div className="text-center">
@@ -34,7 +36,7 @@ export default function ResourcesPage() {
       <section id="resource-grid" className="mt-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {resources.map((resource) => (
-            <Card key={resource.title} className="flex flex-col overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <Card key={resource._id} className="flex flex-col overflow-hidden hover:shadow-xl transition-shadow duration-300">
               <CardHeader className="p-0">
                 <div className="relative h-48 w-full">
                   <Image
