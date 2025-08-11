@@ -3,7 +3,9 @@
 import { taxPolicyFAQChatbot, summarizeSummitContent } from "@/ai/flows";
 import { z } from "zod";
 import clientPromise from "@/lib/mongodb";
-import { partnershipInquiry } from "@/lib/types";
+import { partnershipInquiry, User } from "@/lib/types";
+import bcrypt from "bcryptjs";
+import { redirect } from 'next/navigation';
 
 const partnershipSchema = z.object({
   name: z.string().min(2, "Name is required."),
@@ -11,6 +13,22 @@ const partnershipSchema = z.object({
   company: z.string().optional(),
   message: z.string().min(10, "Message must be at least 10 characters."),
 });
+
+const signupSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters."),
+    email: z.string().email("Invalid email address."),
+    password: z.string().min(6, "Password must be at least 6 characters."),
+    confirmPassword: z.string()
+}).refine(data => data.password === data.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"]
+});
+
+const loginSchema = z.object({
+    email: z.string().email("Invalid email address."),
+    password: z.string().min(1, "Password is required."),
+});
+
 
 export async function handlePartnershipForm(prevState: any, formData: FormData) {
   try {
@@ -31,7 +49,7 @@ export async function handlePartnershipForm(prevState: any, formData: FormData) 
 
     const client = await clientPromise;
     const db = client.db("TaxForwardSummit");
-    await db.collection("partnership_inquiries").insertOne({
+    await db.collection<Omit<partnershipInquiry, '_id'>>("partnership_inquiries").insertOne({
       ...validatedFields.data,
       createdAt: new Date(),
     });
@@ -54,8 +72,6 @@ export async function getRecentPartnerships(): Promise<partnershipInquiry[]> {
             .limit(10)
             .toArray();
 
-        // The data from MongoDB includes an _id field which is an ObjectId.
-        // We need to convert it to a string to be able to pass it to the client component.
         return partnerships.map(p => ({ ...p, _id: p._id.toString() })) as partnershipInquiry[];
     } catch(e) {
         console.error("Failed to fetch partnerships", e);
@@ -89,5 +105,98 @@ export async function handleSummarizeContent(prevState: any, formData: FormData)
     } catch(error) {
         console.error('Summarization error:', error);
         return { summary: '', error: 'Failed to summarize content. Please try again.' };
+    }
+}
+
+export async function handleSignUp(prevState: any, formData: FormData) {
+    const validatedFields = signupSchema.safeParse(Object.fromEntries(formData.entries()));
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Please correct the errors.",
+            success: false,
+        };
+    }
+    
+    const { name, email, password } = validatedFields.data;
+
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const usersCollection = db.collection<User>("users");
+
+        const existingUser = await usersCollection.findOne({ email });
+        if(existingUser) {
+            return {
+                errors: { email: ["User with this email already exists."] },
+                message: "User already exists.",
+                success: false,
+            };
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        await usersCollection.insertOne({
+            _id: undefined,
+            name,
+            email,
+            password: hashedPassword,
+            role: 'user', // Default role
+            createdAt: new Date(),
+        });
+
+        return { message: "Signup successful! You can now log in.", errors: {}, success: true };
+
+    } catch (e) {
+        console.error(e);
+        return { message: "An unexpected error occurred.", errors: {}, success: false };
+    }
+}
+
+export async function handleLogin(prevState: any, formData: FormData) {
+    const validatedFields = loginSchema.safeParse(Object.fromEntries(formData.entries()));
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Invalid credentials.",
+            success: false,
+        };
+    }
+
+    const { email, password } = validatedFields.data;
+
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const user = await db.collection<User>("users").findOne({ email });
+
+        if (!user || !user.password) {
+             return { message: "Invalid credentials.", errors: {}, success: false };
+        }
+
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+        if(!isPasswordMatch) {
+            return { message: "Invalid credentials.", errors: {}, success: false };
+        }
+        
+        // In a real app, you would set a cookie or session token here.
+        // For now, we will just redirect based on role.
+
+    } catch (e) {
+        console.error(e);
+        return { message: "An unexpected error occurred.", errors: {}, success: false };
+    }
+
+    // This is not a secure way to handle sessions.
+    // For a real application, use a library like NextAuth.js or Lucia.
+    const user = await (await clientPromise).db("TaxForwardSummit").collection<User>("users").findOne({ email });
+    if (user?.role === 'admin') {
+        redirect('/admin');
+    } else {
+        // Redirect to a user dashboard if it exists, or home for now.
+        redirect('/');
     }
 }

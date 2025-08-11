@@ -38,7 +38,7 @@ export default function AdminLayout({
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Collaborations">
-                <Link href="#"><Handshake /><span>Collaborations</span></Link>
+                <Link href="/admin/collaborations"><Handshake /><span>Collaborations</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
