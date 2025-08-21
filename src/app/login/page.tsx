@@ -41,7 +41,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (state?.success) {
       sessionStorage.setItem('userLoggedIn', 'true');
-      router.push('/');
+      router.push('/dashboard');
     } else if (state?.message && !state.success) {
       toast({
         title: "Login Failed",

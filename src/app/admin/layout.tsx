@@ -28,21 +28,22 @@ export default function AdminLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // In a real app, you'd have a more robust session check (e.g., check a cookie/token)
-    // For this simulation, we'll use sessionStorage.
+    setIsClient(true);
     const loggedIn = sessionStorage.getItem('adminLoggedIn');
-    if (loggedIn !== 'true' && pathname !== '/admin/login' && pathname !== '/admin/signup') {
-      router.push('/admin/login');
-    } else {
+    if (loggedIn === 'true') {
       setIsLoggedIn(true);
+    } else if (pathname !== '/admin/login' && pathname !== '/admin/signup') {
+      router.push('/admin/login');
     }
   }, [pathname, router]);
   
   const handleLogout = () => {
     sessionStorage.removeItem('adminLoggedIn');
+    setIsLoggedIn(false);
     router.push('/admin/login');
   };
 
@@ -51,8 +52,15 @@ export default function AdminLayout({
     return <>{children}</>;
   }
   
+  // Don't render anything until client-side check is complete
+  if (!isClient) {
+    return null;
+  }
+  
+  // If not logged in, the effect will have already started the redirect.
+  // Render nothing to avoid a flash of the layout.
   if (!isLoggedIn) {
-    return null; // Or a loading spinner
+      return null;
   }
 
   return (

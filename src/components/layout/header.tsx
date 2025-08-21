@@ -20,8 +20,10 @@ export function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     // Check sessionStorage on client
     setIsUserLoggedIn(sessionStorage.getItem('userLoggedIn') === 'true');
   }, [pathname]);
@@ -30,7 +32,13 @@ export function Header() {
     sessionStorage.removeItem('userLoggedIn');
     setIsUserLoggedIn(false);
     router.push('/');
+    router.refresh(); // Forces a re-render to update header state
   };
+  
+  // Don't render the header on admin pages
+  if (pathname.startsWith('/admin')) {
+      return null;
+  }
   
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -53,15 +61,6 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-             <Link
-                href="/admin/login"
-                className={cn(
-                  "transition-colors hover:text-foreground/80",
-                  pathname.startsWith("/admin") ? "text-foreground" : "text-foreground/60"
-                )}
-              >
-                Admin
-              </Link>
           </nav>
         </div>
         
@@ -96,15 +95,6 @@ export function Header() {
                       {item.label}
                     </Link>
                   ))}
-                   <Link
-                      href="/admin/login"
-                      className={cn(
-                        "text-lg",
-                        pathname.startsWith("/admin") ? "text-primary font-semibold" : "text-muted-foreground"
-                      )}
-                    >
-                      Admin
-                    </Link>
                 </div>
               </SheetContent>
             </Sheet>
@@ -116,7 +106,7 @@ export function Header() {
           </Link>
 
           <nav className="flex items-center gap-2">
-            {isUserLoggedIn ? (
+            {isClient && isUserLoggedIn ? (
               <>
                  <Button variant="ghost" asChild>
                     <Link href="/dashboard">Dashboard</Link>
@@ -126,10 +116,15 @@ export function Header() {
                 </Button>
               </>
             ) : (
-              <Button asChild>
-                <Link href="/login">Sign In</Link>
-              </Button>
+               isClient && (
+                <Button asChild>
+                  <Link href="/login">Sign In</Link>
+                </Button>
+               )
             )}
+             <Button variant="outline" asChild>
+                <Link href="/admin/login">Admin</Link>
+            </Button>
           </nav>
         </div>
       </div>
