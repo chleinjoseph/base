@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -34,6 +34,7 @@ export default function SignupPage() {
   const [state, formAction] = useActionState(handleSignUp, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
+  const router = useRouter();
 
    useEffect(() => {
     if (state.success) {
@@ -42,7 +43,7 @@ export default function SignupPage() {
         description: state.message,
       });
       formRef.current?.reset();
-      redirect('/login');
+      router.push('/login');
     } else if (state.message && (Object.keys(state.errors ?? {}).length > 0 || !state.success)) {
        toast({
         title: "Something went wrong",
@@ -50,7 +51,7 @@ export default function SignupPage() {
         variant: "destructive"
       });
     }
-  }, [state, toast]);
+  }, [state, toast, router]);
 
   return (
     <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
@@ -110,3 +111,5 @@ export default function SignupPage() {
     </div>
   );
 }
+
+    

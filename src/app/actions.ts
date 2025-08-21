@@ -211,11 +211,12 @@ export async function handleLogin(prevState: any, formData: FormData) {
     }
 
     const { email, password } = validatedFields.data;
+    let user: User | null;
 
     try {
         const client = await clientPromise;
         const db = client.db("TaxForwardSummit");
-        const user = await db.collection<User>("users").findOne({ email });
+        user = await db.collection<User>("users").findOne({ email });
 
         if (!user || !user.password) {
              return { message: "Invalid credentials.", errors: {}, success: false };
@@ -237,7 +238,6 @@ export async function handleLogin(prevState: any, formData: FormData) {
 
     // This is not a secure way to handle sessions.
     // For a real application, use a library like NextAuth.js or Lucia.
-    const user = await (await clientPromise).db("TaxForwardSummit").collection<User>("users").findOne({ email });
     if (user?.role === 'admin') {
         redirect('/admin');
     } else {
@@ -404,3 +404,5 @@ export async function getUsers(): Promise<User[]> {
         return [];
     }
 }
+
+    

@@ -39,10 +39,10 @@ export function Header() {
               </Link>
             ))}
              <Link
-                href="/admin"
+                href="/login"
                 className={cn(
                   "transition-colors hover:text-foreground/80",
-                  pathname === "/admin" ? "text-foreground" : "text-foreground/60"
+                  pathname.startsWith("/admin") ? "text-foreground" : "text-foreground/60"
                 )}
               >
                 Admin
@@ -82,10 +82,10 @@ export function Header() {
                     </Link>
                   ))}
                    <Link
-                      href="/admin"
+                      href="/login"
                       className={cn(
                         "text-lg",
-                        pathname === "/admin" ? "text-primary font-semibold" : "text-muted-foreground"
+                        pathname.startsWith("/admin") ? "text-primary font-semibold" : "text-muted-foreground"
                       )}
                     >
                       Admin
@@ -110,3 +110,5 @@ export function Header() {
     </header>
   );
 }
+
+    
