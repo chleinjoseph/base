@@ -1,9 +1,9 @@
 
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { useFormStatus } from 'react-dom';
-import { handleLogin, hasAdminUser } from "@/app/actions";
+import { handleAdminSignUp } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,46 +16,44 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from 'next/navigation';
 import { Sprout } from "lucide-react";
-
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <Button className="w-full" type="submit" disabled={pending}>
        {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-      Sign In
+      Create Admin Account
     </Button>
   );
 }
 
-export default function AdminLoginPage() {
+export default function AdminSignupPage() {
   const initialState = { message: null, errors: {}, success: false };
-  const [state, formAction] = useActionState(handleLogin, initialState);
+  const [state, formAction] = useActionState(handleAdminSignUp, initialState);
+  const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
-  const [adminExists, setAdminExists] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  useEffect(() => {
-    async function checkAdmin() {
-        const exists = await hasAdminUser();
-        setAdminExists(exists);
-        setLoading(false);
-    }
-    checkAdmin();
-  }, []);
-
-  useEffect(() => {
-    if (state?.message && !state.success) {
+   useEffect(() => {
+    if (state.success) {
       toast({
-        title: "Login Failed",
+        title: "Success!",
+        description: state.message,
+      });
+      formRef.current?.reset();
+      router.push('/admin/login');
+    } else if (state.message) {
+       toast({
+        title: "Something went wrong",
         description: state.message,
         variant: "destructive"
       });
     }
-  }, [state, toast]);
+  }, [state, toast, router]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary/50 px-4 py-12 sm:px-6 lg:px-8">
@@ -68,13 +66,18 @@ export default function AdminLoginPage() {
         </div>
         <Card>
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold">Admin Access</CardTitle>
+            <CardTitle className="text-2xl font-bold">Create Admin Account</CardTitle>
             <CardDescription>
-              Enter your credentials to access the dashboard.
+              Create the first administrator account for Serleo Globals.
             </CardDescription>
           </CardHeader>
-          <form action={formAction}>
+          <form action={formAction} ref={formRef}>
             <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" name="name" placeholder="Your Name" required />
+                {state.errors?.name && <p className="text-sm text-destructive">{state.errors.name[0]}</p>}
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -84,28 +87,31 @@ export default function AdminLoginPage() {
                   placeholder="admin@example.com"
                   required
                 />
-                 {state?.errors?.email && <p className="text-sm text-destructive">{state.errors.email[0]}</p>}
+                 {state.errors?.email && <p className="text-sm text-destructive">{state.errors.email[0]}</p>}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <Input id="password" name="password" type="password" required />
-                {state?.errors?.password && <p className="text-sm text-destructive">{state.errors.password[0]}</p>}
+                 {state.errors?.password && <p className="text-sm text-destructive">{state.errors.password[0]}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input id="confirmPassword" name="confirmPassword" type="password" required />
+                 {state.errors?.confirmPassword && <p className="text-sm text-destructive">{state.errors.confirmPassword[0]}</p>}
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
               <SubmitButton />
-               {!loading && !adminExists && (
-                    <p className="text-center text-sm text-muted-foreground">
-                        No admin account found.{" "}
-                        <Link
-                        href="/admin/signup"
-                        className="font-medium text-primary hover:underline"
-                        prefetch={false}
-                        >
-                        Create One
-                        </Link>
-                    </p>
-                )}
+               <p className="text-center text-sm text-muted-foreground">
+                Already have an account?{" "}
+                <Link
+                  href="/admin/login"
+                  className="font-medium text-primary hover:underline"
+                  prefetch={false}
+                >
+                  Sign In
+                </Link>
+              </p>
             </CardFooter>
           </form>
         </Card>

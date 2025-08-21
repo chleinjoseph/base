@@ -99,7 +99,7 @@ export async function getDashboardStats() {
         
         const collaborationsCount = await db.collection("partnership_inquiries").countDocuments();
         const postsCount = await db.collection("posts").countDocuments();
-        const usersCount = await db.collection("users").countDocuments();
+        const usersCount = await db.collection("users").countDocuments({ role: 'user' });
 
         // Placeholder for monthly/weekly changes. A more complex query would be needed.
         return {
@@ -187,7 +187,7 @@ export async function handleSignUp(prevState: any, formData: FormData) {
             name,
             email,
             password: hashedPassword,
-            role: 'user', // Default role
+            role: 'user', // Default role for general sign-up
             createdAt: new Date(),
         });
 
@@ -228,20 +228,14 @@ export async function handleLogin(prevState: any, formData: FormData) {
             return { message: "Invalid credentials.", errors: {}, success: false };
         }
         
-        // In a real app, you would set a cookie or session token here.
-        // For now, we will just redirect based on role.
-
     } catch (e) {
         console.error(e);
         return { message: "An unexpected error occurred.", errors: {}, success: false };
     }
 
-    // This is not a secure way to handle sessions.
-    // For a real application, use a library like NextAuth.js or Lucia.
     if (user?.role === 'admin') {
         redirect('/admin');
     } else {
-        // Redirect to a user dashboard if it exists, or home for now.
         redirect('/');
     }
 }
@@ -303,7 +297,7 @@ async function seedPosts() {
 
 export async function getPosts(filter?: { type: string }): Promise<Post[]> {
     try {
-        await seedPosts(); // Seed database if empty
+        await seedPosts();
         const client = await clientPromise;
         const db = client.db("TaxForwardSummit");
         const query = filter && filter.type !== 'All' ? { type: filter.type } : {};
@@ -391,7 +385,6 @@ export async function getUsers(): Promise<User[]> {
             .sort({ createdAt: -1 })
             .toArray();
 
-        // Remove password before sending to client
         return users.map(u => ({ 
             _id: u._id.toString(),
             name: u.name,
@@ -405,4 +398,68 @@ export async function getUsers(): Promise<User[]> {
     }
 }
 
+export async function hasAdminUser(): Promise<boolean> {
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const admin = await db.collection("users").findOne({ role: 'admin' });
+        return !!admin;
+    } catch (e) {
+        console.error("Failed to check for admin user", e);
+        return false;
+    }
+}
+
+export async function handleAdminSignUp(prevState: any, formData: FormData) {
+    const validatedFields = signupSchema.safeParse(Object.fromEntries(formData.entries()));
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Please correct the errors.",
+            success: false,
+        };
+    }
     
+    const { name, email, password } = validatedFields.data;
+
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const usersCollection = db.collection<User>("users");
+
+        const adminExists = await usersCollection.findOne({ role: 'admin' });
+        if(adminExists) {
+            return {
+                errors: {},
+                message: "An admin account already exists. New admin signups are disabled.",
+                success: false,
+            };
+        }
+
+        const existingUser = await usersCollection.findOne({ email });
+        if(existingUser) {
+            return {
+                errors: { email: ["User with this email already exists."] },
+                message: "User already exists.",
+                success: false,
+            };
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        await usersCollection.insertOne({
+            name,
+            email,
+            password: hashedPassword,
+            role: 'admin',
+            createdAt: new Date(),
+        });
+
+        return { message: "Admin account created successfully! You can now log in.", errors: {}, success: true };
+
+    } catch (e) {
+        console.error(e);
+        return { message: "An unexpected error occurred.", errors: {}, success: false };
+    }
+}
