@@ -1,10 +1,12 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowRight, Leaf, Mic, Rocket, ShieldCheck, Banknote, BrainCircuit } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getTestimonials } from './actions';
+import { Testimonial } from '@/lib/types';
+
 
 const coreSectors = [
   { 
@@ -34,28 +36,9 @@ const coreSectors = [
   }
 ];
 
-const testimonials = [
-  {
-    quote: "Serleo Globals didn't just give me a platform; it gave me a voice. The mentorship in the Startups sector was pivotal for my business.",
-    name: "Aisha Bello",
-    title: "Founder, Eco-Threads",
-    avatar: "https://placehold.co/100x100.png"
-  },
-  {
-    quote: "The financial literacy workshops by Serleo Investment were a game-changer. I finally feel in control of my financial future.",
-    name: "Kwame Asante",
-    title: "University Student",
-    avatar: "https://placehold.co/100x100.png"
-  },
-  {
-    quote: "Through Serleo Arts, I found a community that values my creativity and pushes me to grow as a spoken word artist.",
-    name: "Priya Sharma",
-    title: "Poet & Performer",
-    avatar: "https://placehold.co/100x100.png"
-  }
-]
+export default async function Home() {
+  const testimonials = await getTestimonials();
 
-export default function Home() {
   return (
     <div className="flex flex-col">
       <section className="relative h-[70vh] md:h-[80vh] flex items-center justify-center text-center text-white bg-primary overflow-hidden">
@@ -131,35 +114,37 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="impact" className="py-16 md:py-24 bg-background">
-        <div className="container px-4 md:px-6">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold font-headline text-primary">Our Impact</h2>
-            <p className="mt-2 max-w-2xl mx-auto text-lg text-muted-foreground">
-              Hear from the lives we've touched and the communities we've transformed.
-            </p>
+      {testimonials.length > 0 && (
+        <section id="impact" className="py-16 md:py-24 bg-background">
+          <div className="container px-4 md:px-6">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold font-headline text-primary">Our Impact</h2>
+              <p className="mt-2 max-w-2xl mx-auto text-lg text-muted-foreground">
+                Hear from the lives we've touched and the communities we've transformed.
+              </p>
+            </div>
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+              {testimonials.map((testimonial: Testimonial) => (
+                <Card key={testimonial._id.toString()} className="flex flex-col justify-between transition-all duration-300 hover:shadow-lg">
+                  <CardContent className="pt-6">
+                    <p className="text-muted-foreground italic">"{testimonial.quote}"</p>
+                  </CardContent>
+                  <CardHeader className="flex-row items-center gap-4 mt-auto pt-4 border-t">
+                     <Avatar className="h-12 w-12">
+                        <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint="person portrait" />
+                        <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <CardTitle className="text-base">{testimonial.name}</CardTitle>
+                        <p className="text-sm text-accent font-semibold">{testimonial.title}</p>
+                      </div>
+                  </CardHeader>
+                </Card>
+              ))}
+            </div>
           </div>
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
-              <Card key={testimonial.name} className="flex flex-col justify-between transition-all duration-300 hover:shadow-lg">
-                <CardContent className="pt-6">
-                  <p className="text-muted-foreground italic">"{testimonial.quote}"</p>
-                </CardContent>
-                <CardHeader className="flex-row items-center gap-4 mt-auto pt-4 border-t">
-                   <Avatar className="h-12 w-12">
-                      <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint="person portrait" />
-                      <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <CardTitle className="text-base">{testimonial.name}</CardTitle>
-                      <p className="text-sm text-accent font-semibold">{testimonial.title}</p>
-                    </div>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

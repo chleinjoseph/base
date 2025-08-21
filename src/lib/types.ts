@@ -27,3 +27,12 @@ export type Post = {
     aiHint: string;
     createdAt: Date;
 }
+
+export type Testimonial = {
+    _id: string | ObjectId;
+    name: string;
+    title: string;
+    quote: string;
+    avatar: string;
+    createdAt: Date;
+}

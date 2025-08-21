@@ -3,7 +3,7 @@
 import { serleoAssistant, summarizeSummitContent } from "@/ai/flows";
 import { z } from "zod";
 import clientPromise from "@/lib/mongodb";
-import { partnershipInquiry, User, Post } from "@/lib/types";
+import { partnershipInquiry, User, Post, Testimonial } from "@/lib/types";
 import bcrypt from "bcryptjs";
 import { redirect } from 'next/navigation';
 import { revalidatePath } from "next/cache";
@@ -38,6 +38,14 @@ const postSchema = z.object({
     aiHint: z.string().min(3, 'AI Hint must be at least 3 characters.'),
 });
 
+const testimonialSchema = z.object({
+    name: z.string().min(2, 'Name is required.'),
+    title: z.string().min(3, 'Title is required.'),
+    quote: z.string().min(10, 'Quote must be at least 10 characters.'),
+    avatar: z.string().url('Please enter a valid image URL.'),
+});
+
+
 interface ChatMessage {
     role: 'user' | 'bot';
     content: string;
@@ -62,12 +70,22 @@ export async function handlePartnershipForm(prevState: any, formData: FormData) 
 
     const client = await clientPromise;
     const db = client.db("TaxForwardSummit");
-    await db.collection<Omit<partnershipInquiry, '_id'>>("partnership_inquiries").insertOne({
+    const collection = db.collection<Omit<partnershipInquiry, '_id'>>("partnership_inquiries");
+    await collection.insertOne({
       ...validatedFields.data,
       createdAt: new Date(),
     });
 
+    // Capping the collection to the latest 100 entries.
+    const count = await collection.countDocuments();
+    if (count > 100) {
+      const oldestDocs = await collection.find().sort({ createdAt: 1 }).limit(count - 100).toArray();
+      const idsToDelete = oldestDocs.map(doc => doc._id);
+      await collection.deleteMany({ _id: { $in: idsToDelete } });
+    }
 
+    revalidatePath('/admin/collaborations');
+    revalidatePath('/admin');
     return { message: "Thank you for your inquiry! We will be in touch shortly.", errors: {}, success: true };
   } catch (e) {
     console.error(e);
@@ -100,13 +118,15 @@ export async function getDashboardStats() {
         const collaborationsCount = await db.collection("partnership_inquiries").countDocuments();
         const postsCount = await db.collection("posts").countDocuments();
         const usersCount = await db.collection("users").countDocuments({ role: 'user' });
+        const testimonialsCount = await db.collection("testimonials").countDocuments();
+
 
         // Placeholder for monthly/weekly changes. A more complex query would be needed.
         return {
             collaborations: { total: collaborationsCount, change: "+5 this month" },
             posts: { total: postsCount, change: "+3 this week" },
             users: { total: usersCount, change: "+10% since last month" },
-            inquiries: { total: collaborationsCount, change: "25 new threads" }, // Re-using collaborations for now
+            testimonials: { total: testimonialsCount, change: "2 new this week" },
         };
 
     } catch (e) {
@@ -115,7 +135,7 @@ export async function getDashboardStats() {
             collaborations: { total: 0, change: "N/A" },
             posts: { total: 0, change: "N/A" },
             users: { total: 0, change: "N/A" },
-            inquiries: { total: 0, change: "N/A" },
+            testimonials: { total: 0, change: "N/A" },
         };
     }
 }
@@ -240,64 +260,8 @@ export async function handleLogin(prevState: any, formData: FormData) {
     }
 }
 
-async function seedPosts() {
-    const client = await clientPromise;
-    const db = client.db("TaxForwardSummit");
-    const postsCollection = db.collection("posts");
-    const count = await postsCollection.countDocuments();
-    if (count === 0) {
-        console.log("Seeding initial posts...");
-        const initialPosts = [
-          {
-            title: '5 Steps to Validate Your Startup Idea',
-            type: 'Business',
-            description: 'A practical guide to testing your business concept before you build. This article walks you through customer interviews, MVP creation, and market analysis to ensure your idea has wings.',
-            imageUrl: 'https://placehold.co/600x400.png',
-            aiHint: 'startup blueprint'
-          },
-          {
-            title: 'The Art of Financial Freedom: A Youth Guide',
-            type: 'Finance',
-            description: 'Learn the fundamentals of budgeting, saving, and investing for a secure future. We break down complex financial topics into simple, actionable steps for young people.',
-            imageUrl: 'https://placehold.co/600x400.png',
-            aiHint: 'financial planning'
-          },
-          {
-            title: 'Unlocking Creativity: Overcoming Creative Blocks',
-            type: 'Creativity',
-            description: 'Techniques and exercises to help you break through creative barriers and find your flow. From brainstorming methods to mindfulness, find what works for you.',
-            imageUrl: 'https://placehold.co/600x400.png',
-            aiHint: 'artist thinking'
-          },
-            {
-            title: 'Mindfulness for Young Leaders',
-            type: 'Wellness',
-            description: 'Discover how mindfulness practices can improve focus, reduce stress, and enhance leadership qualities. A calm mind is a powerful tool for any aspiring leader.',
-            imageUrl: 'https://placehold.co/600x400.png',
-            aiHint: 'person meditating'
-          },
-          {
-            title: 'From Farm to Table: Youth in Agribusiness',
-            type: 'Business',
-            description: 'Exploring the massive opportunities for young entrepreneurs in the modern agricultural sector, from tech innovations to sustainable farming.',
-            imageUrl: 'https://placehold.co/600x400.png',
-            aiHint: 'modern agriculture'
-          },
-          {
-            title: 'Building Your Personal Brand as a Creative',
-            type: 'Creativity',
-            description: 'A workshop on how to market yourself and your art in the digital age. Learn about social media strategies, portfolio building, and networking.',
-            imageUrl: 'https://placehold.co/600x400.png',
-            aiHint: 'personal branding'
-          },
-        ];
-        await postsCollection.insertMany(initialPosts.map(p => ({...p, createdAt: new Date() })));
-    }
-}
-
 export async function getPosts(filter?: { type: string }): Promise<Post[]> {
     try {
-        await seedPosts();
         const client = await clientPromise;
         const db = client.db("TaxForwardSummit");
         const query = filter && filter.type !== 'All' ? { type: filter.type } : {};
@@ -461,5 +425,66 @@ export async function handleAdminSignUp(prevState: any, formData: FormData) {
     } catch (e) {
         console.error(e);
         return { message: "An unexpected error occurred.", errors: {}, success: false };
+    }
+}
+
+export async function getTestimonials(): Promise<Testimonial[]> {
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const testimonials = await db.collection("testimonials")
+            .find({})
+            .sort({ createdAt: -1 })
+            .toArray();
+
+        return testimonials.map(t => ({ ...t, _id: t._id.toString() })) as Testimonial[];
+    } catch (e) {
+        console.error("Failed to fetch testimonials", e);
+        return [];
+    }
+}
+
+export async function handleCreateTestimonial(prevState: any, formData: FormData) {
+    const validatedFields = testimonialSchema.safeParse(Object.fromEntries(formData.entries()));
+    
+    if(!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Please correct the errors.",
+            success: false,
+        };
+    }
+    
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        await db.collection("testimonials").insertOne({
+            ...validatedFields.data,
+            createdAt: new Date(),
+        });
+
+        revalidatePath('/');
+        revalidatePath('/admin/testimonials');
+        return { message: "Testimonial created successfully.", errors: {}, success: true };
+    } catch (e) {
+        console.error(e);
+        return { message: "Failed to create testimonial.", errors: {}, success: false };
+    }
+}
+
+
+export async function handleDeleteTestimonial(testimonialId: string) {
+    try {
+        const { ObjectId } = await import('mongodb');
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        await db.collection("testimonials").deleteOne({ _id: new ObjectId(testimonialId) });
+        
+        revalidatePath('/');
+        revalidatePath('/admin/testimonials');
+        return { message: "Testimonial deleted successfully.", success: true };
+    } catch(e) {
+        console.error(e);
+        return { message: "Failed to delete testimonial.", success: false };
     }
 }

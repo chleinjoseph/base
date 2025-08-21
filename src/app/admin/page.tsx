@@ -15,7 +15,7 @@ type DashboardStats = {
     collaborations: { total: number; change: string };
     posts: { total: number; change: string };
     users: { total: number; change: string };
-    inquiries: { total: number; change: string };
+    testimonials: { total: number; change: string };
 };
 
 const SummaryCard = ({ title, value, icon: Icon, change }: { title: string, value: string, icon: React.ElementType, change: string }) => (
@@ -74,9 +74,9 @@ export default function AdminPage() {
         {stats ? (
             <>
                 <SummaryCard title="Total Collaborations" value={stats.collaborations.total.toString()} icon={Handshake} change={stats.collaborations.change} />
-                <SummaryCard title="New Blog Posts" value={stats.posts.total.toString()} icon={FileText} change={stats.posts.change} />
+                <SummaryCard title="Blog Posts" value={stats.posts.total.toString()} icon={FileText} change={stats.posts.change} />
+                <SummaryCard title="Testimonials" value={stats.testimonials.total.toString()} icon={MessageSquare} change={stats.testimonials.change} />
                 <SummaryCard title="Active Users" value={stats.users.total.toString()} icon={Users} change={stats.users.change} />
-                <SummaryCard title="New Inquiries" value={stats.inquiries.total.toString()} icon={MessageSquare} change={stats.inquiries.change} />
             </>
         ) : (
             Array.from({ length: 4 }).map((_, i) => <Card key={i}><CardContent className="p-6"><div className="h-20 w-full bg-muted animate-pulse rounded-md" /></CardContent></Card>)
