@@ -48,12 +48,12 @@ export default function AdminLayout({
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Users">
-                <Link href="#"><Users /><span>Users</span></Link>
+                <Link href="/admin/users"><Users /><span>Users</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="AI Tools">
-                <Link href="#"><Bot /><span>AI Tools</span></Link>
+                <Link href="/admin/ai-tools"><Bot /><span>AI Tools</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

@@ -381,3 +381,26 @@ export async function handleDeletePost(postId: string) {
         return { message: "Failed to delete post.", success: false };
     }
 }
+
+export async function getUsers(): Promise<User[]> {
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const users = await db.collection("users")
+            .find({})
+            .sort({ createdAt: -1 })
+            .toArray();
+
+        // Remove password before sending to client
+        return users.map(u => ({ 
+            _id: u._id.toString(),
+            name: u.name,
+            email: u.email,
+            role: u.role,
+            createdAt: u.createdAt,
+        })) as User[];
+    } catch (e) {
+        console.error("Failed to fetch users", e);
+        return [];
+    }
+}
