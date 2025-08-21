@@ -95,6 +95,12 @@ export function Header() {
                       {item.label}
                     </Link>
                   ))}
+                   <Link
+                      href="/admin/login"
+                      className="text-lg text-muted-foreground"
+                    >
+                      Admin
+                    </Link>
                 </div>
               </SheetContent>
             </Sheet>
@@ -122,7 +128,7 @@ export function Header() {
                 </Button>
                )
             )}
-             <Button variant="outline" asChild>
+             <Button variant="outline" asChild className="hidden md:flex">
                 <Link href="/admin/login">Admin</Link>
             </Button>
           </nav>
