@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -39,7 +40,7 @@ export function Header() {
               </Link>
             ))}
              <Link
-                href="/login"
+                href="/admin/login"
                 className={cn(
                   "transition-colors hover:text-foreground/80",
                   pathname.startsWith("/admin") ? "text-foreground" : "text-foreground/60"
@@ -82,7 +83,7 @@ export function Header() {
                     </Link>
                   ))}
                    <Link
-                      href="/login"
+                      href="/admin/login"
                       className={cn(
                         "text-lg",
                         pathname.startsWith("/admin") ? "text-primary font-semibold" : "text-muted-foreground"
@@ -110,5 +111,3 @@ export function Header() {
     </header>
   );
 }
-
-    

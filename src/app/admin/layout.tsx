@@ -1,3 +1,4 @@
+
 import {
   SidebarProvider,
   Sidebar,
@@ -66,8 +67,8 @@ export default function AdminLayout({
             </Avatar>
             <span className="text-sm font-semibold">Admin</span>
           </div>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <LogOut className="h-4 w-4" />
+          <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+            <Link href="/admin/login"><LogOut className="h-4 w-4" /></Link>
           </Button>
         </SidebarFooter>
       </Sidebar>
