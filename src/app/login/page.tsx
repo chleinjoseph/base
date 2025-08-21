@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useEffect } from "react";
@@ -17,6 +18,8 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from 'next/navigation';
+
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -29,19 +32,24 @@ function SubmitButton() {
 }
 
 export default function LoginPage() {
-  const initialState = { message: null, errors: {}, success: false };
+  const initialState = { message: null, errors: {}, success: false, user: null };
   const [state, formAction] = useActionState(handleLogin, initialState);
   const { toast } = useToast();
+  const router = useRouter();
+
 
   useEffect(() => {
-    if (state?.message && !state.success) {
+    if (state?.success) {
+      sessionStorage.setItem('userLoggedIn', 'true');
+      router.push('/');
+    } else if (state?.message && !state.success) {
       toast({
         title: "Login Failed",
         description: state.message,
         variant: "destructive"
       });
     }
-  }, [state, toast]);
+  }, [state, toast, router]);
 
   return (
     <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
@@ -91,5 +99,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-    

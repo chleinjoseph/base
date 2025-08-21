@@ -2,21 +2,35 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Sprout } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 const navItems = [
   { href: '/#about', label: 'About' },
   { href: '/#sectors', label: 'Sectors' },
-  { href: '/partnerships', label: 'Collaborate' },
+  { href: '/collaborate', label: 'Collaborate' },
   { href: '/resources', label: 'Blog' },
 ];
 
 export function Header() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check sessionStorage on client
+    setIsUserLoggedIn(sessionStorage.getItem('userLoggedIn') === 'true');
+  }, [pathname]);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('userLoggedIn');
+    setIsUserLoggedIn(false);
+    router.push('/');
+  };
   
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -101,10 +115,21 @@ export function Header() {
             <span className="font-bold font-headline">Serleo Globals</span>
           </Link>
 
-          <nav className="flex items-center">
-            <Button asChild>
-              <Link href="/login">Sign In</Link>
-            </Button>
+          <nav className="flex items-center gap-2">
+            {isUserLoggedIn ? (
+              <>
+                 <Button variant="ghost" asChild>
+                    <Link href="/dashboard">Dashboard</Link>
+                </Button>
+                <Button onClick={handleLogout}>
+                  Log Out
+                </Button>
+              </>
+            ) : (
+              <Button asChild>
+                <Link href="/login">Sign In</Link>
+              </Button>
+            )}
           </nav>
         </div>
       </div>

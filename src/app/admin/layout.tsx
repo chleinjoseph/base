@@ -1,4 +1,6 @@
 
+'use client';
+
 import {
   SidebarProvider,
   Sidebar,
@@ -15,7 +17,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Handshake, LayoutDashboard, FileText, Users, Bot, Sprout, LogOut, Rss, MessageSquare } from "lucide-react";
 import Link from 'next/link';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 
 export default function AdminLayout({
@@ -23,6 +26,35 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // In a real app, you'd have a more robust session check (e.g., check a cookie/token)
+    // For this simulation, we'll use sessionStorage.
+    const loggedIn = sessionStorage.getItem('adminLoggedIn');
+    if (loggedIn !== 'true' && pathname !== '/admin/login' && pathname !== '/admin/signup') {
+      router.push('/admin/login');
+    } else {
+      setIsLoggedIn(true);
+    }
+  }, [pathname, router]);
+  
+  const handleLogout = () => {
+    sessionStorage.removeItem('adminLoggedIn');
+    router.push('/admin/login');
+  };
+
+  // Don't render the layout on login/signup pages
+  if (pathname === '/admin/login' || pathname === '/admin/signup') {
+    return <>{children}</>;
+  }
+  
+  if (!isLoggedIn) {
+    return null; // Or a loading spinner
+  }
+
   return (
     <SidebarProvider>
       <Sidebar>
@@ -74,8 +106,8 @@ export default function AdminLayout({
             </Avatar>
             <span className="text-sm font-semibold">Admin</span>
           </div>
-          <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-            <Link href="/admin/login"><LogOut className="h-4 w-4" /></Link>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleLogout}>
+            <LogOut className="h-4 w-4" />
           </Button>
         </SidebarFooter>
       </Sidebar>

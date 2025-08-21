@@ -1,3 +1,4 @@
+
 "use server";
 
 import { serleoAssistant, summarizeSummitContent } from "@/ai/flows";
@@ -5,7 +6,6 @@ import { z } from "zod";
 import clientPromise from "@/lib/mongodb";
 import { partnershipInquiry, User, Post, Testimonial } from "@/lib/types";
 import bcrypt from "bcryptjs";
-import { redirect } from 'next/navigation';
 import { revalidatePath } from "next/cache";
 
 const partnershipSchema = z.object({
@@ -231,12 +231,11 @@ export async function handleLogin(prevState: any, formData: FormData) {
     }
 
     const { email, password } = validatedFields.data;
-    let user: User | null;
-
+    
     try {
         const client = await clientPromise;
         const db = client.db("TaxForwardSummit");
-        user = await db.collection<User>("users").findOne({ email });
+        const user = await db.collection<User>("users").findOne({ email });
 
         if (!user || !user.password) {
              return { message: "Invalid credentials.", errors: {}, success: false };
@@ -248,15 +247,13 @@ export async function handleLogin(prevState: any, formData: FormData) {
             return { message: "Invalid credentials.", errors: {}, success: false };
         }
         
+        const safeUser = { id: user._id.toString(), name: user.name, email: user.email, role: user.role };
+
+        return { message: "Login successful!", errors: {}, success: true, user: safeUser };
+        
     } catch (e) {
         console.error(e);
         return { message: "An unexpected error occurred.", errors: {}, success: false };
-    }
-
-    if (user?.role === 'admin') {
-        redirect('/admin');
-    } else {
-        redirect('/');
     }
 }
 

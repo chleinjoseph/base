@@ -19,6 +19,7 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { Sprout } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 
 function SubmitButton() {
@@ -32,11 +33,13 @@ function SubmitButton() {
 }
 
 export default function AdminLoginPage() {
-  const initialState = { message: null, errors: {}, success: false };
+  const initialState = { message: null, errors: {}, success: false, user: null };
   const [state, formAction] = useActionState(handleLogin, initialState);
   const { toast } = useToast();
   const [adminExists, setAdminExists] = useState(true);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
 
   useEffect(() => {
     async function checkAdmin() {
@@ -48,14 +51,25 @@ export default function AdminLoginPage() {
   }, []);
 
   useEffect(() => {
-    if (state?.message && !state.success) {
+    if (state?.success && state.user?.role === 'admin') {
+      // In a real app, you'd set a secure cookie/token here
+      sessionStorage.setItem('adminLoggedIn', 'true');
+      router.push('/admin');
+    } else if (state?.message && !state.success) {
       toast({
         title: "Login Failed",
         description: state.message,
         variant: "destructive"
       });
+       if(state.user?.role === 'user') {
+          toast({
+            title: "Access Denied",
+            description: "You are not an administrator.",
+            variant: "destructive"
+          });
+      }
     }
-  }, [state, toast]);
+  }, [state, toast, router]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary/50 px-4 py-12 sm:px-6 lg:px-8">
