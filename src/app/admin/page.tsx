@@ -3,14 +3,20 @@ import { useFormStatus } from 'react-dom';
 import { useActionState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Handshake, FileText, Users, MessageSquare, Loader2 } from "lucide-react"
-import { handleSummarizeContent, getRecentPartnerships } from '../actions';
+import { handleSummarizeContent, getRecentPartnerships, getDashboardStats } from '../actions';
 import { useEffect, useRef, useState } from 'react';
 import { partnershipInquiry } from '@/lib/types';
 import { format } from 'date-fns';
+
+type DashboardStats = {
+    collaborations: { total: number; change: string };
+    posts: { total: number; change: string };
+    users: { total: number; change: string };
+    inquiries: { total: number; change: string };
+};
 
 const SummaryCard = ({ title, value, icon: Icon, change }: { title: string, value: string, icon: React.ElementType, change: string }) => (
   <Card>
@@ -39,6 +45,7 @@ export default function AdminPage() {
     const [state, dispatch] = useActionState(handleSummarizeContent, initialState);
     const formRef = useRef<HTMLFormElement>(null);
     const [partnerships, setPartnerships] = useState<partnershipInquiry[]>([]);
+    const [stats, setStats] = useState<DashboardStats | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -48,29 +55,39 @@ export default function AdminPage() {
     }, [state.summary]);
     
     useEffect(() => {
-        async function loadPartnerships() {
+        async function loadData() {
             setLoading(true);
-            const fetchedPartnerships = await getRecentPartnerships();
+            const [fetchedPartnerships, fetchedStats] = await Promise.all([
+                getRecentPartnerships(),
+                getDashboardStats()
+            ]);
             setPartnerships(fetchedPartnerships);
+            setStats(fetchedStats);
             setLoading(false);
         }
-        loadPartnerships();
+        loadData();
     }, []);
 
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <SummaryCard title="Total Collaborations" value="78" icon={Handshake} change="+5 this month" />
-        <SummaryCard title="New Blog Posts" value="12" icon={FileText} change="+3 this week" />
-        <SummaryCard title="Active Users" value="1,245" icon={Users} change="+10% since last month" />
-        <SummaryCard title="New Inquiries" value="89" icon={MessageSquare} change="25 new threads" />
+        {stats ? (
+            <>
+                <SummaryCard title="Total Collaborations" value={stats.collaborations.total.toString()} icon={Handshake} change={stats.collaborations.change} />
+                <SummaryCard title="New Blog Posts" value={stats.posts.total.toString()} icon={FileText} change={stats.posts.change} />
+                <SummaryCard title="Active Users" value={stats.users.total.toString()} icon={Users} change={stats.users.change} />
+                <SummaryCard title="New Inquiries" value={stats.inquiries.total.toString()} icon={MessageSquare} change={stats.inquiries.change} />
+            </>
+        ) : (
+            Array.from({ length: 4 }).map((_, i) => <Card key={i}><CardContent className="p-6"><div className="h-20 w-full bg-muted animate-pulse rounded-md" /></CardContent></Card>)
+        )}
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
         <Card className="lg:col-span-4">
           <CardHeader>
             <CardTitle>Recent Collaboration Inquiries</CardTitle>
-            <CardDescription>Track and manage new collaboration requests.</CardDescription>
+            <CardDescription>The 5 most recent partnership requests.</CardDescription>
           </CardHeader>
           <CardContent>
              {loading ? (

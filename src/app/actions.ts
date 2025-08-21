@@ -82,13 +82,41 @@ export async function getRecentPartnerships(): Promise<partnershipInquiry[]> {
         const partnerships = await db.collection("partnership_inquiries")
             .find({})
             .sort({ createdAt: -1 })
-            .limit(10)
+            .limit(5)
             .toArray();
 
         return partnerships.map(p => ({ ...p, _id: p._id.toString() })) as partnershipInquiry[];
     } catch(e) {
         console.error("Failed to fetch partnerships", e);
         return [];
+    }
+}
+
+export async function getDashboardStats() {
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        
+        const collaborationsCount = await db.collection("partnership_inquiries").countDocuments();
+        const postsCount = await db.collection("posts").countDocuments();
+        const usersCount = await db.collection("users").countDocuments();
+
+        // Placeholder for monthly/weekly changes. A more complex query would be needed.
+        return {
+            collaborations: { total: collaborationsCount, change: "+5 this month" },
+            posts: { total: postsCount, change: "+3 this week" },
+            users: { total: usersCount, change: "+10% since last month" },
+            inquiries: { total: collaborationsCount, change: "25 new threads" }, // Re-using collaborations for now
+        };
+
+    } catch (e) {
+        console.error("Failed to fetch dashboard stats", e);
+        return {
+            collaborations: { total: 0, change: "N/A" },
+            posts: { total: 0, change: "N/A" },
+            users: { total: 0, change: "N/A" },
+            inquiries: { total: 0, change: "N/A" },
+        };
     }
 }
 
@@ -229,42 +257,42 @@ async function seedPosts() {
           {
             title: '5 Steps to Validate Your Startup Idea',
             type: 'Business',
-            description: 'A practical guide to testing your business concept before you build.',
+            description: 'A practical guide to testing your business concept before you build. This article walks you through customer interviews, MVP creation, and market analysis to ensure your idea has wings.',
             imageUrl: 'https://placehold.co/600x400.png',
             aiHint: 'startup blueprint'
           },
           {
             title: 'The Art of Financial Freedom: A Youth Guide',
             type: 'Finance',
-            description: 'Learn the fundamentals of budgeting, saving, and investing for a secure future.',
+            description: 'Learn the fundamentals of budgeting, saving, and investing for a secure future. We break down complex financial topics into simple, actionable steps for young people.',
             imageUrl: 'https://placehold.co/600x400.png',
             aiHint: 'financial planning'
           },
           {
             title: 'Unlocking Creativity: Overcoming Creative Blocks',
             type: 'Creativity',
-            description: 'Techniques and exercises to help you break through creative barriers and find your flow.',
+            description: 'Techniques and exercises to help you break through creative barriers and find your flow. From brainstorming methods to mindfulness, find what works for you.',
             imageUrl: 'https://placehold.co/600x400.png',
             aiHint: 'artist thinking'
           },
             {
             title: 'Mindfulness for Young Leaders',
             type: 'Wellness',
-            description: 'Discover how mindfulness practices can improve focus, reduce stress, and enhance leadership.',
+            description: 'Discover how mindfulness practices can improve focus, reduce stress, and enhance leadership qualities. A calm mind is a powerful tool for any aspiring leader.',
             imageUrl: 'https://placehold.co/600x400.png',
             aiHint: 'person meditating'
           },
           {
             title: 'From Farm to Table: Youth in Agribusiness',
             type: 'Business',
-            description: 'Exploring the opportunities for young entrepreneurs in the modern agricultural sector.',
+            description: 'Exploring the massive opportunities for young entrepreneurs in the modern agricultural sector, from tech innovations to sustainable farming.',
             imageUrl: 'https://placehold.co/600x400.png',
             aiHint: 'modern agriculture'
           },
           {
             title: 'Building Your Personal Brand as a Creative',
             type: 'Creativity',
-            description: 'A workshop on how to market yourself and your art in the digital age.',
+            description: 'A workshop on how to market yourself and your art in the digital age. Learn about social media strategies, portfolio building, and networking.',
             imageUrl: 'https://placehold.co/600x400.png',
             aiHint: 'personal branding'
           },
@@ -273,13 +301,14 @@ async function seedPosts() {
     }
 }
 
-export async function getPosts(): Promise<Post[]> {
+export async function getPosts(filter?: { type: string }): Promise<Post[]> {
     try {
         await seedPosts(); // Seed database if empty
         const client = await clientPromise;
         const db = client.db("TaxForwardSummit");
+        const query = filter && filter.type !== 'All' ? { type: filter.type } : {};
         const posts = await db.collection("posts")
-            .find({})
+            .find(query)
             .sort({ createdAt: -1 })
             .toArray();
 
@@ -287,6 +316,25 @@ export async function getPosts(): Promise<Post[]> {
     } catch (e) {
         console.error("Failed to fetch posts", e);
         return [];
+    }
+}
+
+
+export async function getPostById(postId: string): Promise<Post | null> {
+    try {
+        const { ObjectId } = await import('mongodb');
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const post = await db.collection("posts").findOne({ _id: new ObjectId(postId) });
+
+        if (!post) {
+            return null;
+        }
+
+        return { ...post, _id: post._id.toString() } as Post;
+    } catch (e) {
+        console.error("Failed to fetch post", e);
+        return null;
     }
 }
 
