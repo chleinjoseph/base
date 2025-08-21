@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -10,7 +11,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   Tooltip,
@@ -354,6 +355,21 @@ const SidebarHeader = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div">
 >(({ className, ...props }, ref) => {
+  const { isMobile } = useSidebar();
+  if (isMobile) {
+    return (
+      <SheetHeader className="p-2">
+        <SheetTitle asChild>
+          <div
+            ref={ref}
+            data-sidebar="header"
+            className={cn("flex flex-col gap-2", className)}
+            {...props}
+          />
+        </SheetTitle>
+      </SheetHeader>
+    )
+  }
   return (
     <div
       ref={ref}
