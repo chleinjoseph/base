@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -57,16 +58,21 @@ const testimonials = [
 export default function Home() {
   return (
     <div className="flex flex-col">
-      <section className="relative h-[70vh] md:h-[80vh] flex items-center justify-center text-center text-white bg-primary">
-        <Image
-          src="https://placehold.co/1920x1080.png"
-          alt="Diverse group of empowered youth"
-          layout="fill"
-          objectFit="cover"
-          className="absolute inset-0 z-0 opacity-20"
-          data-ai-hint="empowered youth community"
-        />
-        <div className="z-10 container px-4 md:px-6">
+      <section className="relative h-[70vh] md:h-[80vh] flex items-center justify-center text-center text-white bg-primary overflow-hidden">
+         <div className="absolute inset-0 z-0 opacity-20">
+            <Image
+              src="https://placehold.co/1920x1080.png"
+              alt="Diverse group of empowered youth"
+              layout="fill"
+              objectFit="cover"
+              className="opacity-50"
+              data-ai-hint="empowered youth community"
+            />
+            <div className="absolute inset-0 bg-black/30" />
+         </div>
+         <div className="absolute inset-0 z-10 bg-gradient-to-t from-background via-transparent to-transparent" />
+         <div className="absolute -bottom-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-radial from-primary/50 via-primary/10 to-transparent animate-[spin_20s_linear_infinite]" />
+         <div className="z-20 container px-4 md:px-6">
           <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tighter">
             Unleashing Potential, Inspiring Futures.
           </h1>
@@ -74,7 +80,7 @@ export default function Home() {
             Serleo Globals is more than a company—it's a movement dedicated to empowering the next generation of leaders, creators, and innovators.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-            <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg">
               <Link href="/collaborate">
                 Get Involved <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
@@ -92,15 +98,8 @@ export default function Home() {
                 Serleo Globals is a multidimensional youth empowerment brand committed to transforming lives through creativity, entrepreneurship, health, and innovation. Born from a blend of artistry, business acumen, and a deep-seated purpose, our mission is to build a world where every young person has the tools and opportunities to realize their full potential. We champion scalable, grassroots solutions that create lasting impact.
               </p>
             </div>
-            <div className="relative h-80 w-full">
-               <Image
-                  src={"https://placehold.co/600x400.png"}
-                  alt="Founder of Serleo Globals"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-lg shadow-md"
-                  data-ai-hint="inspirational founder portrait"
-                />
+            <div className="relative h-80 w-full flex items-center justify-center bg-secondary rounded-lg shadow-md p-8">
+                <BrainCircuit className="h-32 w-32 text-primary opacity-20" />
             </div>
           </div>
         </div>
@@ -116,10 +115,12 @@ export default function Home() {
           </div>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {coreSectors.map((sector) => (
-               <Card key={sector.title}>
-                <CardHeader className="flex flex-row items-center gap-4">
-                  <sector.icon className="h-8 w-8 text-accent" />
-                  <CardTitle>{sector.title}</CardTitle>
+               <Card key={sector.title} className="text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <CardHeader className="items-center">
+                  <div className="p-4 bg-accent/20 rounded-full">
+                    <sector.icon className="h-8 w-8 text-accent" />
+                  </div>
+                  <CardTitle className="mt-4">{sector.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">{sector.description}</p>
@@ -140,11 +141,11 @@ export default function Home() {
           </div>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial) => (
-              <Card key={testimonial.name} className="flex flex-col justify-between">
+              <Card key={testimonial.name} className="flex flex-col justify-between transition-all duration-300 hover:shadow-lg">
                 <CardContent className="pt-6">
                   <p className="text-muted-foreground italic">"{testimonial.quote}"</p>
                 </CardContent>
-                <CardHeader className="flex-row items-center gap-4">
+                <CardHeader className="flex-row items-center gap-4 mt-auto pt-4 border-t">
                    <Avatar className="h-12 w-12">
                       <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint="person portrait" />
                       <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>

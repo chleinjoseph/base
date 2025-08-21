@@ -15,7 +15,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Handshake, LayoutDashboard, FileText, Users, Bot, Sprout, LogOut, Rss } from "lucide-react";
 import Link from 'next/link';
-import { SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+
 
 export default function AdminLayout({
   children,
@@ -75,8 +76,10 @@ export default function AdminLayout({
       </Sidebar>
       <SidebarInset>
         <header className="flex items-center justify-between p-4 border-b">
-            <SidebarTrigger />
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+            <div className="flex items-center gap-4">
+              <SidebarTrigger className="md:hidden" />
+              <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+            </div>
         </header>
         <div className="p-4 md:p-6 bg-secondary/50 min-h-screen">
           {children}

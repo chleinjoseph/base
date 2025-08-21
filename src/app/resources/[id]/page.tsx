@@ -1,10 +1,11 @@
+
 import { getPostById } from '@/app/actions';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { format } from 'date-fns';
-import { Calendar, Tag } from 'lucide-react';
+import { Calendar, Tag, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
@@ -40,16 +41,11 @@ export default async function ResourcePostPage({ params }: { params: { id: strin
                     </h1>
                 </div>
 
-                <div className="relative h-96 w-full mb-12 rounded-lg overflow-hidden shadow-lg">
-                    <Image
-                        src={post.imageUrl}
-                        alt={post.title}
-                        layout="fill"
-                        objectFit="cover"
-                        data-ai-hint={post.aiHint}
-                        priority
-                    />
-                </div>
+                <Card className="relative h-96 w-full mb-12 rounded-lg overflow-hidden shadow-lg bg-secondary">
+                    <div className="flex items-center justify-center h-full">
+                        <BookOpen className="h-32 w-32 text-primary/10" />
+                    </div>
+                </Card>
 
                 <div className="prose prose-lg dark:prose-invert max-w-none mx-auto text-foreground">
                     <p className="lead text-xl text-muted-foreground mb-8">{post.description}</p>

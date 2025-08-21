@@ -358,7 +358,7 @@ const SidebarHeader = React.forwardRef<
   const { isMobile } = useSidebar();
   if (isMobile) {
     return (
-      <SheetHeader className="p-2">
+      <SheetHeader className="border-b p-2">
         <SheetTitle asChild>
           <div
             ref={ref}

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useFormStatus } from 'react-dom';
@@ -21,6 +22,21 @@ function SubmitButton() {
     </Button>
   );
 }
+
+const CollaborationCard = ({ icon: Icon, title, children }: { icon: React.ElementType, title: string, children: React.ReactNode }) => (
+    <Card className="text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+        <CardHeader className="items-center">
+            <div className="p-4 bg-accent/20 rounded-full">
+                <Icon className="h-8 w-8 text-accent" />
+            </div>
+            <CardTitle className="text-2xl font-headline mt-4">{title}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-muted-foreground">
+            {children}
+        </CardContent>
+    </Card>
+);
+
 
 export default function CollaboratePage() {
   const initialState = { message: null, errors: {}, success: false };
@@ -62,39 +78,21 @@ export default function CollaboratePage() {
 
       <section id="tiers" className="mt-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card>
-            <CardHeader className="items-center text-center">
-               <Handshake className="h-12 w-12 text-accent" />
-              <CardTitle className="text-2xl font-headline mt-4">Partner With Us</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center text-muted-foreground">
-              <p>Collaborate with us on projects, sponsor an event, or integrate your services with our community.</p>
-            </CardContent>
-          </Card>
-           <Card>
-            <CardHeader className="items-center text-center">
-               <PenSquare className="h-12 w-12 text-accent" />
-              <CardTitle className="text-2xl font-headline mt-4">Create With Us</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center text-muted-foreground">
+            <CollaborationCard icon={Handshake} title="Partner With Us">
+                <p>Collaborate with us on projects, sponsor an event, or integrate your services with our community.</p>
+            </CollaborationCard>
+             <CollaborationCard icon={PenSquare} title="Create With Us">
               <p>Are you a creative, a performer, or a facilitator? Let's work together to create inspiring content and events.</p>
-            </CardContent>
-          </Card>
-           <Card>
-            <CardHeader className="items-center text-center">
-               <Briefcase className="h-12 w-12 text-accent" />
-              <CardTitle className="text-2xl font-headline mt-4">Invest In Us</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center text-muted-foreground">
+            </CollaborationCard>
+             <CollaborationCard icon={Briefcase} title="Invest In Us">
               <p>Help us scale our impact. We are seeking investors who align with our vision for global youth empowerment.</p>
-            </CardContent>
-          </Card>
+            </CollaborationCard>
         </div>
       </section>
 
       <section id="contact" className="mt-20">
         <div className="max-w-2xl mx-auto">
-          <Card>
+          <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="text-2xl font-headline">Get In Touch</CardTitle>
               <CardDescription>Fill out the form below for bookings, sponsorships, and collaboration inquiries. Let's make an impact together.</CardDescription>
