@@ -17,7 +17,7 @@ export function Footer() {
             </div>
              <div className="flex flex-col space-y-2">
                 <h4 className="font-semibold">Company</h4>
-                <Link href="/#about" className="text-muted-foreground hover:text-primary text-sm">About Us</Link>
+                <Link href="/" className="text-muted-foreground hover:text-primary text-sm">About Us</Link>
                 <Link href="/resources" className="text-muted-foreground hover:text-primary text-sm">Blog</Link>
                 <Link href="/collaborate" className="text-muted-foreground hover:text-primary text-sm">Collaborate</Link>
             </div>
@@ -25,12 +25,6 @@ export function Footer() {
                  <h4 className="font-semibold">Legal</h4>
                 <Link href="/terms-of-service" className="text-muted-foreground hover:text-primary text-sm">Terms of Service</Link>
                 <Link href="/privacy-policy" className="text-muted-foreground hover:text-primary text-sm">Privacy Policy</Link>
-            </div>
-             <div className="flex flex-col space-y-2">
-                 <h4 className="font-semibold">Follow Us</h4>
-                <Link href="#" className="text-muted-foreground hover:text-primary text-sm">Twitter</Link>
-                <Link href="#" className="text-muted-foreground hover:text-primary text-sm">LinkedIn</Link>
-                <Link href="#" className="text-muted-foreground hover:text-primary text-sm">Instagram</Link>
             </div>
         </div>
       </div>
