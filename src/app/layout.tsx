@@ -21,6 +21,9 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: 'Serleo Globals - Empowering Youth Through Creative Enterprise',
   description: 'Serleo Globals is a multidimensional youth empowerment company transforming lives through creativity, entrepreneurship, health, and innovation.',
+  icons: {
+    icon: '/s-icon.svg',
+  },
 };
 
 export default function RootLayout({
@@ -31,7 +34,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/s-icon.svg" type="image/svg+xml" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet" />
