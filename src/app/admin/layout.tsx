@@ -67,10 +67,14 @@ export default function AdminLayout({
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center gap-2">
-            <Sprout className="h-6 w-6 text-primary" />
-            <span className="font-bold font-headline text-lg">Serleo Admin</span>
-          </div>
+           <SheetHeader>
+            <SheetTitle>
+              <div className="flex items-center gap-2">
+                <Sprout className="h-6 w-6 text-primary" />
+                <span className="font-bold font-headline text-lg">Serleo Admin</span>
+              </div>
+            </SheetTitle>
+          </SheetHeader>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -95,6 +99,11 @@ export default function AdminLayout({
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Blog">
+                <Link href="/admin/blog"><Rss /><span>Blog</span></Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Users">
                 <Link href="/admin/users"><Users /><span>Users</span></Link>
               </SidebarMenuButton>
@@ -110,9 +119,9 @@ export default function AdminLayout({
           <div className="flex items-center gap-2">
             <Avatar className="h-8 w-8">
               <AvatarImage src="https://picsum.photos/40/40" data-ai-hint="person avatar" />
-              <AvatarFallback>A</AvatarFallback>
+              <AvatarFallback>CJO</AvatarFallback>
             </Avatar>
-            <span className="text-sm font-semibold">Admin</span>
+            <span className="text-sm font-semibold">Chlein Joseph Odhiambo</span>
           </div>
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleLogout}>
             <LogOut className="h-4 w-4" />

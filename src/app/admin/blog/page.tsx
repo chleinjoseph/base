@@ -102,7 +102,7 @@ export default function BlogManagementPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="imageUrl">Image URL</Label>
-                <Input id="imageUrl" name="imageUrl" defaultValue="https://placehold.co/600x400.png" />
+                <Input id="imageUrl" name="imageUrl" defaultValue="https://picsum.photos/600/400.png" />
                  {state.errors?.imageUrl && <p className="text-sm text-destructive">{state.errors.imageUrl[0]}</p>}
               </div>
               <div className="space-y-2">
