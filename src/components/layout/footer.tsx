@@ -17,11 +17,16 @@ export function Footer() {
             </div>
              <div className="flex flex-col space-y-2">
                 <h4 className="font-semibold">Company</h4>
-                <Link href="/" className="text-muted-foreground hover:text-primary text-sm">About Us</Link>
-                <Link href="/resources" className="text-muted-foreground hover:text-primary text-sm">Blog</Link>
-                <Link href="/collaborate" className="text-muted-foreground hover:text-primary text-sm">Collaborate</Link>
+                <Link href="/#about" className="text-muted-foreground hover:text-primary text-sm">About Us</Link>
+                <Link href="/projects" className="text-muted-foreground hover:text-primary text-sm">Projects & Events</Link>
+                <Link href="/collaborate" className="text-muted-foreground hover:text-primary text-sm">Partner With Us</Link>
             </div>
             <div className="flex flex-col space-y-2">
+                 <h4 className="font-semibold">Community</h4>
+                 <Link href="/signup" className="text-muted-foreground hover:text-primary text-sm">Join Us</Link>
+                <Link href="/contact" className="text-muted-foreground hover:text-primary text-sm">Contact Us</Link>
+            </div>
+             <div className="flex flex-col space-y-2">
                  <h4 className="font-semibold">Legal</h4>
                 <Link href="/terms-of-service" className="text-muted-foreground hover:text-primary text-sm">Terms of Service</Link>
                 <Link href="/privacy-policy" className="text-muted-foreground hover:text-primary text-sm">Privacy Policy</Link>

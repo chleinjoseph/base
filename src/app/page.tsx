@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ArrowRight, Leaf, Mic, Rocket, ShieldCheck, Banknote, BrainCircuit } from 'lucide-react';
+import { ArrowRight, Leaf, Mic, Rocket, Banknote, BrainCircuit } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getTestimonials } from './actions';
@@ -20,17 +20,17 @@ const coreSectors = [
     icon: Mic
   },
   { 
-    title: 'Serleo Startups',
+    title: 'Serleo StartUps',
     description: 'Incubating and mentoring the next generation of youth-led businesses.',
     icon: Rocket
   },
   { 
-    title: 'Serleo Investment',
+    title: 'Serleo Investment & Wealth Circle',
     description: 'Fostering financial literacy and building youth investment circles for a prosperous future.',
     icon: Banknote
   },
   {
-    title: 'Serleo Life Insights',
+    title: 'Serleo Life Insights (Wellness & Empowerment)',
     description: 'Nurturing mental wellness, balanced lifestyles, and the journey to self-mastery.',
     icon: BrainCircuit
   }
@@ -41,12 +41,12 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      <section className="relative h-[70vh] md:h-[80vh] flex items-center justify-center text-center text-white bg-primary overflow-hidden">
+      <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center text-center text-white bg-primary overflow-hidden">
          <div className="absolute inset-0 z-0 opacity-20">
             <Image
-              src="https://placehold.co/1920x1080.png"
+              src="https://picsum.photos/1920/1080.png"
               alt="Diverse group of empowered youth"
-              layout="fill"
+              fill
               objectFit="cover"
               className="opacity-50"
               data-ai-hint="empowered youth community"
@@ -57,16 +57,21 @@ export default async function Home() {
          <div className="absolute -bottom-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-radial from-primary/50 via-primary/10 to-transparent animate-[spin_20s_linear_infinite]" />
          <div className="z-20 container px-4 md:px-6">
           <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tighter">
-            Unleashing Potential, Inspiring Futures.
+            Welcome to Serleo Globals
           </h1>
           <p className="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-primary-foreground/80">
-            Serleo Globals is more than a company—it's a movement dedicated to empowering the next generation of leaders, creators, and innovators.
+            A multidimensional youth-driven enterprise committed to empowering the next generation through innovation, creativity, investment, and purpose. Serleo Globals is not just a brand; it's a global youth movement.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
             <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg">
               <Link href="/collaborate">
-                Get Involved <ArrowRight className="ml-2 h-5 w-5" />
+                Partner With Us <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
+            </Button>
+             <Button asChild size="lg" variant="outline" className="text-white border-white/50 hover:bg-white/10 hover:text-white">
+                <Link href="/signup">
+                  Join Our Community
+                </Link>
             </Button>
           </div>
         </div>
@@ -78,11 +83,12 @@ export default async function Home() {
             <div>
               <h2 className="text-3xl font-bold text-primary font-headline">About Serleo Globals</h2>
               <p className="mt-4 text-lg text-muted-foreground">
-                Serleo Globals is a multidimensional youth empowerment brand committed to transforming lives through creativity, entrepreneurship, health, and innovation. Born from a blend of artistry, business acumen, and a deep-seated purpose, our mission is to build a world where every young person has the tools and opportunities to realize their full potential. We champion scalable, grassroots solutions that create lasting impact.
+                Rooted in transformational leadership and strategic execution, Serleo operates across key sectors to inspire growth, financial independence, and personal mastery. We blend creativity with business, impact with sustainability, and vision with execution.
               </p>
             </div>
-            <div className="relative h-80 w-full flex items-center justify-center bg-secondary rounded-lg shadow-md p-8">
-                <BrainCircuit className="h-32 w-32 text-primary opacity-20" />
+             <div className="relative h-80 w-full flex items-center justify-center bg-secondary rounded-lg shadow-md p-8 overflow-hidden">
+                <div className="absolute -inset-2 bg-gradient-to-br from-accent/20 via-primary/20 to-transparent animate-[spin_10s_linear_infinite]"/>
+                <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="h-32 w-32 text-primary opacity-20 relative z-10"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 22c-5.523 0-10-4.477-10-10S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zM12 12c-5.523 0-10-4.477 0-10S22 6.477 12 12zM2 12c5.523 0 10 4.477 0 10S-3.523 16.477 2 12z"/></svg>
             </div>
           </div>
         </div>
@@ -98,9 +104,9 @@ export default async function Home() {
           </div>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {coreSectors.map((sector) => (
-               <Card key={sector.title} className="text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+               <Card key={sector.title} className="text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group bg-card/50 backdrop-blur-sm border-border/50">
                 <CardHeader className="items-center">
-                  <div className="p-4 bg-accent/20 rounded-full">
+                  <div className="p-4 bg-accent/20 rounded-full transition-all duration-300 group-hover:scale-110 group-hover:bg-accent/30">
                     <sector.icon className="h-8 w-8 text-accent" />
                   </div>
                   <CardTitle className="mt-4">{sector.title}</CardTitle>
@@ -125,7 +131,7 @@ export default async function Home() {
             </div>
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
               {testimonials.map((testimonial: Testimonial) => (
-                <Card key={testimonial._id.toString()} className="flex flex-col justify-between transition-all duration-300 hover:shadow-lg">
+                <Card key={testimonial._id.toString()} className="flex flex-col justify-between transition-all duration-300 hover:shadow-lg bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="pt-6">
                     <p className="text-muted-foreground italic">"{testimonial.quote}"</p>
                   </CardContent>

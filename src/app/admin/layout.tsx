@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Handshake, LayoutDashboard, FileText, Users, Bot, Sprout, LogOut, Rss, MessageSquare } from "lucide-react";
+import { Handshake, LayoutDashboard, FileText, Users, Bot, Sprout, LogOut, Rss, MessageSquare, Briefcase } from "lucide-react";
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -80,13 +80,13 @@ export default function AdminLayout({
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Collaborations">
-                <Link href="/admin/collaborations"><Handshake /><span>Collaborations</span></Link>
+              <SidebarMenuButton asChild tooltip="Projects & Events">
+                <Link href="/admin/projects"><Briefcase /><span>Projects & Events</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Blog Posts">
-                <Link href="/admin/blog"><Rss /><span>Blog Posts</span></Link>
+              <SidebarMenuButton asChild tooltip="Collaborations">
+                <Link href="/admin/collaborations"><Handshake /><span>Collaborations</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
@@ -109,7 +109,7 @@ export default function AdminLayout({
         <SidebarFooter className="flex items-center justify-between border-t border-sidebar-border pt-2">
           <div className="flex items-center gap-2">
             <Avatar className="h-8 w-8">
-              <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="person avatar" />
+              <AvatarImage src="https://picsum.photos/40/40" data-ai-hint="person avatar" />
               <AvatarFallback>A</AvatarFallback>
             </Avatar>
             <span className="text-sm font-semibold">Admin</span>

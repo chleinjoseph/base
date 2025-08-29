@@ -10,10 +10,10 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 const navItems = [
-  { href: '/#about', label: 'About' },
-  { href: '/#sectors', label: 'Sectors' },
-  { href: '/collaborate', label: 'Collaborate' },
-  { href: '/resources', label: 'Blog' },
+  { href: '/#about', label: 'About Us' },
+  { href: '/#sectors', label: 'Our Sectors' },
+  { href: '/projects', label: 'Projects & Events' },
+  { href: '/collaborate', label: 'Partner With Us' },
 ];
 
 export function Header() {
@@ -74,7 +74,7 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left">
-                <SheetHeader className="border-b pb-4">
+                 <SheetHeader className="border-b pb-4 mb-4">
                     <SheetTitle>
                         <Link href="/" className="flex items-center space-x-2">
                         <Sprout className="h-6 w-6 text-primary" />
@@ -82,7 +82,7 @@ export function Header() {
                         </Link>
                     </SheetTitle>
                 </SheetHeader>
-                <div className="flex flex-col space-y-4 mt-6">
+                <div className="flex flex-col space-y-4">
                   {navItems.map((item) => (
                     <Link
                       key={item.href}
@@ -124,7 +124,7 @@ export function Header() {
             ) : (
                isClient && (
                 <Button asChild>
-                  <Link href="/login">Sign In</Link>
+                  <Link href="/signup">Join Community</Link>
                 </Button>
                )
             )}
