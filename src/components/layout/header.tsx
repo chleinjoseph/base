@@ -13,6 +13,7 @@ const navItems = [
   { href: '/#about', label: 'About Us' },
   { href: '/#sectors', label: 'Our Sectors' },
   { href: '/projects', label: 'Projects & Events' },
+  { href: '/forum', label: 'Networking Forum' },
   { href: '/collaborate', label: 'Partner With Us' },
 ];
 

@@ -39,8 +39,9 @@ export default function LoginPage() {
 
 
   useEffect(() => {
-    if (state?.success) {
+    if (state?.success && state.user) {
       sessionStorage.setItem('userLoggedIn', 'true');
+      sessionStorage.setItem('user', JSON.stringify(state.user));
       router.push('/dashboard');
     } else if (state?.message && !state.success) {
       toast({

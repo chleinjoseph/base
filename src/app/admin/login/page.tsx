@@ -51,23 +51,23 @@ export default function AdminLoginPage() {
   }, []);
 
   useEffect(() => {
-    if (state?.success && state.user?.role === 'admin') {
+    if (state?.success && state.user?.role?.includes('admin')) {
       // In a real app, you'd set a secure cookie/token here
       sessionStorage.setItem('adminLoggedIn', 'true');
+      sessionStorage.setItem('user', JSON.stringify(state.user));
       router.push('/admin');
+    } else if (state?.success && state.user?.role === 'user') {
+        toast({
+            title: "Access Denied",
+            description: "You are not an administrator.",
+            variant: "destructive"
+        });
     } else if (state?.message && !state.success) {
       toast({
         title: "Login Failed",
         description: state.message,
         variant: "destructive"
       });
-       if(state.user?.role === 'user') {
-          toast({
-            title: "Access Denied",
-            description: "You are not an administrator.",
-            variant: "destructive"
-          });
-      }
     }
   }, [state, toast, router]);
 

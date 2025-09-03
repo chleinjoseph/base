@@ -37,3 +37,12 @@ export type Testimonial = {
     avatar: string;
     createdAt: Date;
 }
+
+export type Message = {
+    _id: string | ObjectId;
+    content: string;
+    userId: string;
+    userName: string;
+    userRole: 'user' | 'admin' | 'superadmin';
+    createdAt: Date;
+}

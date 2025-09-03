@@ -4,7 +4,7 @@
 import { serleoAssistant, summarizeSummitContent } from "@/ai/flows";
 import { z } from "zod";
 import clientPromise from "@/lib/mongodb";
-import { partnershipInquiry, User, Post, Testimonial } from "@/lib/types";
+import { partnershipInquiry, User, Post, Testimonial, Message } from "@/lib/types";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 
@@ -43,6 +43,13 @@ const testimonialSchema = z.object({
     title: z.string().min(3, 'Title is required.'),
     quote: z.string().min(10, 'Quote must be at least 10 characters.'),
     avatar: z.string().url('Please enter a valid image URL.'),
+});
+
+const messageSchema = z.object({
+    content: z.string().min(1, "Message cannot be empty.").max(1000, "Message is too long."),
+    userId: z.string(),
+    userName: z.string(),
+    userRole: z.enum(['user', 'admin', 'superadmin'])
 });
 
 
@@ -238,13 +245,13 @@ export async function handleLogin(prevState: any, formData: FormData) {
         const user = await db.collection<User>("users").findOne({ email });
 
         if (!user || !user.password) {
-             return { message: "Invalid credentials.", errors: {}, success: false };
+             return { message: "Invalid credentials.", errors: {}, success: false, user: null };
         }
 
         const isPasswordMatch = await bcrypt.compare(password, user.password);
 
         if(!isPasswordMatch) {
-            return { message: "Invalid credentials.", errors: {}, success: false };
+            return { message: "Invalid credentials.", errors: {}, success: false, user: null };
         }
         
         const safeUser = { id: user._id.toString(), name: user.name, email: user.email, role: user.role };
@@ -253,7 +260,7 @@ export async function handleLogin(prevState: any, formData: FormData) {
         
     } catch (e) {
         console.error(e);
-        return { message: "An unexpected error occurred.", errors: {}, success: false };
+        return { message: "An unexpected error occurred.", errors: {}, success: false, user: null };
     }
 }
 
@@ -523,4 +530,59 @@ export async function updateUserRole(userId: string, newRole: 'user' | 'admin'):
     console.error("Failed to update user role:", error);
     return { success: false, message: "An unexpected error occurred." };
   }
+}
+
+// Forum Actions
+export async function getMessages(): Promise<Message[]> {
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const messages = await db.collection("forum_messages")
+            .find({})
+            .sort({ createdAt: -1 })
+            .limit(200) // Fetch the latest 200 messages
+            .toArray();
+
+        // The sort is descending, so reverse to show oldest first.
+        return messages.reverse().map(m => ({ ...m, _id: m._id.toString() })) as Message[];
+    } catch(e) {
+        console.error("Failed to fetch messages", e);
+        return [];
+    }
+}
+
+export async function handleCreateMessage(prevState: any, formData: FormData) {
+    const validatedFields = messageSchema.safeParse(Object.fromEntries(formData.entries()));
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            success: false,
+        };
+    }
+    
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const collection = db.collection<Omit<Message, '_id'>>("forum_messages");
+
+        await collection.insertOne({
+            ...validatedFields.data,
+            createdAt: new Date(),
+        });
+
+        // Capping mechanism: keep only the newest 200 messages
+        const count = await collection.countDocuments();
+        if (count > 200) {
+            const oldestDocs = await collection.find().sort({ createdAt: 1 }).limit(count - 200).toArray();
+            const idsToDelete = oldestDocs.map(doc => doc._id);
+            await collection.deleteMany({ _id: { $in: idsToDelete } });
+        }
+
+        revalidatePath('/forum');
+        return { errors: {}, success: true };
+    } catch (e) {
+        console.error(e);
+        return { message: "Failed to send message.", errors: {}, success: false };
+    }
 }

@@ -15,10 +15,11 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Handshake, LayoutDashboard, FileText, Users, Bot, Sprout, LogOut, Rss, MessageSquare, Briefcase } from "lucide-react";
+import { Handshake, LayoutDashboard, FileText, Users, Bot, Sprout, LogOut, Rss, MessageSquare, Briefcase, MessageCircle } from "lucide-react";
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 
 export default function AdminLayout({
@@ -86,6 +87,11 @@ export default function AdminLayout({
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Projects & Events">
                 <Link href="/admin/projects"><Briefcase /><span>Projects & Events</span></Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Forum">
+                <Link href="/forum"><MessageCircle /><span>Forum</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
