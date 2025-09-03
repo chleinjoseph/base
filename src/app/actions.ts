@@ -341,23 +341,30 @@ export async function getUsers(): Promise<User[]> {
     try {
         const client = await clientPromise;
         const db = client.db("TaxForwardSummit");
-        const users = await db.collection("users")
+        const users = await db.collection<User>("users")
             .find({})
             .sort({ createdAt: -1 })
             .toArray();
 
-        return users.map(u => ({ 
-            _id: u._id.toString(),
-            name: u.name,
-            email: u.email,
-            role: u.role,
-            createdAt: u.createdAt,
-        })) as User[];
+        // Find the first admin to determine the superadmin
+        const firstAdmin = await db.collection<User>("users").findOne({ role: 'admin' }, { sort: { createdAt: 1 } });
+        
+        return users.map(u => {
+            const isSuperAdmin = u.role === 'admin' && firstAdmin?._id.equals(u._id as any);
+            return {
+                _id: u._id.toString(),
+                name: u.name,
+                email: u.email,
+                role: isSuperAdmin ? 'superadmin' : u.role,
+                createdAt: u.createdAt,
+            }
+        }) as User[];
     } catch (e) {
         console.error("Failed to fetch users", e);
         return [];
     }
 }
+
 
 export async function hasAdminUser(): Promise<boolean> {
     try {
@@ -484,4 +491,36 @@ export async function handleDeleteTestimonial(testimonialId: string) {
         console.error(e);
         return { message: "Failed to delete testimonial.", success: false };
     }
+}
+
+
+export async function updateUserRole(userId: string, newRole: 'user' | 'admin'): Promise<{ success: boolean; message: string }> {
+  try {
+    const { ObjectId } = await import('mongodb');
+    const client = await clientPromise;
+    const db = client.db("TaxForwardSummit");
+    const usersCollection = db.collection<User>("users");
+
+    // Prevent the first admin (superadmin) from being demoted
+    const firstAdmin = await usersCollection.findOne({ role: 'admin' }, { sort: { createdAt: 1 } });
+    if (firstAdmin && firstAdmin._id.equals(new ObjectId(userId))) {
+      return { success: false, message: "The primary admin (superadmin) cannot be demoted." };
+    }
+
+    const result = await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: { role: newRole } }
+    );
+
+    if (result.modifiedCount === 0) {
+      return { success: false, message: "User not found or role is already set." };
+    }
+
+    revalidatePath('/admin/users');
+    return { success: true, message: `User role updated to ${newRole}.` };
+
+  } catch (error) {
+    console.error("Failed to update user role:", error);
+    return { success: false, message: "An unexpected error occurred." };
+  }
 }

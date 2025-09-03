@@ -1,3 +1,4 @@
+
 import { ObjectId } from "mongodb";
 
 export type partnershipInquiry = {
@@ -14,7 +15,7 @@ export type User = {
     name: string;
     email: string;
     password?: string; // Hashed password
-    role: 'user' | 'admin';
+    role: 'user' | 'admin' | 'superadmin';
     createdAt: Date;
 }
 
