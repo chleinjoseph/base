@@ -1,7 +1,7 @@
 
 "use server";
 
-import { serleoAssistant, summarizeSummitContent } from "@/ai/flows";
+import { serleoAssistant, summarizeSummitContent, generateImage } from "@/ai/flows";
 import { z } from "zod";
 import clientPromise from "@/lib/mongodb";
 import { partnershipInquiry, User, Post, Testimonial, Message } from "@/lib/types";
@@ -50,6 +50,10 @@ const messageSchema = z.object({
     userId: z.string(),
     userName: z.string(),
     userRole: z.enum(['user', 'admin', 'superadmin'])
+});
+
+const generateImageSchema = z.object({
+    prompt: z.string().min(3, "Prompt must be at least 3 characters long."),
 });
 
 
@@ -178,6 +182,25 @@ export async function handleSummarizeContent(prevState: any, formData: FormData)
     } catch(error) {
         console.error('Summarization error:', error);
         return { summary: '', error: 'Failed to summarize content. Please try again.' };
+    }
+}
+
+export async function handleGenerateImage(prevState: any, formData: FormData) {
+    const validatedFields = generateImageSchema.safeParse(Object.fromEntries(formData.entries()));
+
+    if (!validatedFields.success) {
+        return {
+            imageUrl: null,
+            error: validatedFields.error.flatten().fieldErrors.prompt?.[0]
+        };
+    }
+    
+    try {
+        const result = await generateImage({ prompt: validatedFields.data.prompt });
+        return { imageUrl: result.imageUrl, error: null };
+    } catch (error) {
+        console.error('Image generation error:', error);
+        return { imageUrl: null, error: 'Failed to generate image. The prompt may have been blocked.' };
     }
 }
 
