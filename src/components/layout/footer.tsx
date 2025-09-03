@@ -1,3 +1,4 @@
+
 import { Sprout } from 'lucide-react';
 import Link from 'next/link';
 
@@ -23,6 +24,7 @@ export function Footer() {
                 <Link href="/startups" className="text-muted-foreground hover:text-primary text-sm">Startups Blueprint</Link>
                 <Link href="/life-insights" className="text-muted-foreground hover:text-primary text-sm">Life Insights Blueprint</Link>
                 <Link href="/investment" className="text-muted-foreground hover:text-primary text-sm">Investment Blueprint</Link>
+                <Link href="/agriventure" className="text-muted-foreground hover:text-primary text-sm">Agriventure Blueprint</Link>
             </div>
             <div className="flex flex-col space-y-2">
                  <h4 className="font-semibold">Community</h4>
