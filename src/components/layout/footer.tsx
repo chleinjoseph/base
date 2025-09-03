@@ -25,6 +25,7 @@ export function Footer() {
                 <Link href="/life-insights" className="text-muted-foreground hover:text-primary text-sm">Life Insights Blueprint</Link>
                 <Link href="/investment" className="text-muted-foreground hover:text-primary text-sm">Investment Blueprint</Link>
                 <Link href="/agriventure" className="text-muted-foreground hover:text-primary text-sm">Agriventure Blueprint</Link>
+                <Link href="/arts-and-events" className="text-muted-foreground hover:text-primary text-sm">Arts & Events Blueprint</Link>
             </div>
             <div className="flex flex-col space-y-2">
                  <h4 className="font-semibold">Community</h4>
