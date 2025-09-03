@@ -20,11 +20,12 @@ export function Footer() {
                 <Link href="/#about" className="text-muted-foreground hover:text-primary text-sm">About Us</Link>
                 <Link href="/projects" className="text-muted-foreground hover:text-primary text-sm">Projects & Events</Link>
                 <Link href="/collaborate" className="text-muted-foreground hover:text-primary text-sm">Partner With Us</Link>
+                <Link href="/life-insights" className="text-muted-foreground hover:text-primary text-sm">Life Insights Blueprint</Link>
             </div>
             <div className="flex flex-col space-y-2">
                  <h4 className="font-semibold">Community</h4>
                  <Link href="/signup" className="text-muted-foreground hover:text-primary text-sm">Join Us</Link>
-                <Link href="/contact" className="text-muted-foreground hover:text-primary text-sm">Contact Us</Link>
+                <Link href="/collaborate" className="text-muted-foreground hover:text-primary text-sm">Contact Us</Link>
             </div>
              <div className="flex flex-col space-y-2">
                  <h4 className="font-semibold">Legal</h4>
