@@ -6,11 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowRight, Leaf, Mic, Rocket, Banknote, BrainCircuit, X, Info } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { getTestimonials } from './actions';
 import { Testimonial } from '@/lib/types';
 import { useEffect, useState } from 'react';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 
@@ -18,33 +16,34 @@ const coreSectors = [
   { 
     title: 'Serleo Agriventure', 
     description: 'Pioneering youth engagement in agribusiness and promoting food sustainability.',
-    icon: Leaf
+    icon: Leaf,
+    href: '/agriventure'
   },
   { 
     title: 'Serleo Arts & Events',
     description: 'Championing creative expression through spoken word, modeling, and impactful events.',
-    icon: Mic
+    icon: Mic,
+    href: '/arts-and-events'
   },
   { 
     title: 'Serleo StartUps',
     description: 'Incubating and mentoring the next generation of youth-led businesses.',
-    icon: Rocket
+    icon: Rocket,
+    href: '/startups'
   },
   { 
     title: 'Serleo Investment & Wealth Circle',
     description: 'Fostering financial literacy and building youth investment circles for a prosperous future.',
-    icon: Banknote
+    icon: Banknote,
+    href: '/investment'
   },
   {
     title: 'Serleo Life Insights (Wellness & Empowerment)',
     description: 'Nurturing mental wellness, balanced lifestyles, and the journey to self-mastery.',
-    icon: BrainCircuit
+    icon: BrainCircuit,
+    href: '/life-insights'
   }
 ];
-
-const SvgSlide = ({ children }: { children: React.ReactNode }) => (
-  <div className="w-full h-full flex items-center justify-center p-8">{children}</div>
-);
 
 function WelcomeTour() {
   const [isOpen, setIsOpen] = useState(false);
@@ -106,36 +105,17 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       <WelcomeTour />
-      <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center text-center text-white bg-primary overflow-hidden">
-         <div className="absolute inset-0 z-0 opacity-20">
-            <Carousel>
-                <CarouselContent>
-                    <CarouselItem>
-                       <SvgSlide>
-                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="%23fff" d="M37.6-45.5C47-36.8,51.8-24.3,56-12.2C60.2-0.1,63.9,11.5,60.2,21.9C56.5,32.3,45.4,41.5,34.4,49.5C23.4,57.5,12.5,64.3-1.1,66.1C-14.7,67.9-29.3,64.7-41.2,56.5C-53,48.3,-62.1,35.1,-65.8,21.1C-69.5,7.1,-67.8-7.7,-60.8-20.1C-53.8-32.5,-41.5-42.5,-29.3-51.1C-17.1-59.7,-5-66.9,6.7-68.5C18.4-70.1,30.1-66.1,37.6-58.5C45.1-50.9,49.4-40.7,37.6-45.5Z" transform="translate(100 100) scale(0.7)" /></svg>
-                       </SvgSlide>
-                    </CarouselItem>
-                    <CarouselItem>
-                         <SvgSlide>
-                            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%23fff" d="M48.1,-66.1C62.4,-57.4,74.2,-43.5,79.8,-27.5C85.4,-11.6,84.9,6.3,78.2,21.2C71.5,36.1,58.7,48,44.7,56.9C30.7,65.8,15.3,71.7,1.2,70.6C-13,69.5,-25.9,61.4,-39.8,52.8C-53.7,44.2,-68.6,35.1,-75.4,21.5C-82.2,7.9,-81,-10.1,-74.6,-25.5C-68.2,-40.8,-56.6,-53.4,-43.3,-62.1C-30,-70.8,-15,-75.6,0.9,-76.3C16.8,-77,33.7,-74.7,48.1,-66.1Z" transform="translate(100 100) scale(0.9)" /></svg>
-                        </SvgSlide>
-                    </CarouselItem>
-                    <CarouselItem>
-                         <SvgSlide>
-                           <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%23fff" d="M49.3,-43.4C63.6,-28.9,74.7,-8,72.5,10.6C70.3,29.3,54.8,45.8,36.9,56.2C19,66.6,-1.3,71,-21.8,66.2C-42.3,61.4,-63,47.4,-70.1,28.9C-77.2,10.3,-70.7,-12.9,-58.5,-30.2C-46.3,-47.5,-28.4,-58.9,-9.1,-58.1C10.2,-57.4,20.4,-44.5,33.7,-38.4C47,-32.3,60.3,-33.1,49.3,-43.4Z" transform="translate(100 100) scale(0.9)"/></svg>
-                        </SvgSlide>
-                    </CarouselItem>
-                </CarouselContent>
-            </Carousel>
-            <div className="absolute inset-0 bg-black/30" />
-         </div>
+      <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center text-center text-primary-foreground bg-primary overflow-hidden">
+        <div className="absolute inset-0 z-0 bg-background">
+          <div className="absolute -bottom-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-radial from-primary/10 via-primary/5 to-transparent animate-[spin_20s_linear_infinite]" />
+        </div>
          <div className="absolute inset-0 z-10 bg-gradient-to-t from-background via-transparent to-transparent" />
          
          <div className="z-20 container px-4 md:px-6">
-          <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tighter">
+          <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tighter text-primary">
             Welcome to Serleo Globals
           </h1>
-          <p className="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-primary-foreground/80">
+          <p className="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-foreground/80">
             A multidimensional youth-driven enterprise committed to empowering the next generation through innovation, creativity, investment, and purpose. Serleo Globals is not just a brand; it's a global youth movement.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
@@ -144,7 +124,7 @@ export default function Home() {
                 Partner With Us <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-             <Button asChild size="lg" variant="outline" className="text-white border-white/50 hover:bg-white/10 hover:text-white">
+             <Button asChild size="lg" variant="secondary" className="shadow-lg">
                 <Link href="/signup">
                   Join Our Community
                 </Link>
@@ -181,15 +161,17 @@ export default function Home() {
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {coreSectors.map((sector) => (
                <Card key={sector.title} className="text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group bg-card/50 backdrop-blur-sm border-border/50">
-                <CardHeader className="items-center">
-                  <div className="p-4 bg-accent/20 rounded-full transition-all duration-300 group-hover:scale-110 group-hover:bg-accent/30">
-                    <sector.icon className="h-8 w-8 text-accent" />
-                  </div>
-                  <CardTitle className="mt-4">{sector.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">{sector.description}</p>
-                </CardContent>
+                 <Link href={sector.href} className="flex flex-col h-full">
+                    <CardHeader className="items-center">
+                      <div className="p-4 bg-accent/20 rounded-full transition-all duration-300 group-hover:scale-110 group-hover:bg-accent/30">
+                        <sector.icon className="h-8 w-8 text-accent" />
+                      </div>
+                      <CardTitle className="mt-4">{sector.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                      <p className="text-muted-foreground">{sector.description}</p>
+                    </CardContent>
+                 </Link>
               </Card>
             ))}
           </div>
