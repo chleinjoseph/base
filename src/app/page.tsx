@@ -11,6 +11,7 @@ import { Testimonial } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 
 const coreSectors = [
   { 
@@ -107,7 +108,25 @@ export default function Home() {
       <WelcomeTour />
       <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center text-center text-primary-foreground bg-primary overflow-hidden">
         <div className="absolute inset-0 z-0 bg-background">
-          <div className="absolute -bottom-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-radial from-primary/10 via-primary/5 to-transparent animate-[spin_20s_linear_infinite]" />
+           <Carousel>
+              <CarouselContent>
+                <CarouselItem>
+                  <div className="h-screen w-full flex items-center justify-center bg-blue-100">
+                    <svg viewBox="0 0 100 50" className="w-full h-full"><text x="50" y="25" textAnchor="middle" dy=".3em" fontSize="10">Agriventure</text></svg>
+                  </div>
+                </CarouselItem>
+                <CarouselItem>
+                   <div className="h-screen w-full flex items-center justify-center bg-orange-100">
+                    <svg viewBox="0 0 100 50" className="w-full h-full"><text x="50" y="25" textAnchor="middle" dy=".3em" fontSize="10">Arts & Events</text></svg>
+                  </div>
+                </CarouselItem>
+                <CarouselItem>
+                  <div className="h-screen w-full flex items-center justify-center bg-green-100">
+                    <svg viewBox="0 0 100 50" className="w-full h-full"><text x="50" y="25" textAnchor="middle" dy=".3em" fontSize="10">Startups</text></svg>
+                  </div>
+                </CarouselItem>
+              </CarouselContent>
+            </Carousel>
         </div>
          <div className="absolute inset-0 z-10 bg-gradient-to-t from-background via-transparent to-transparent" />
          
