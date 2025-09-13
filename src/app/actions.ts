@@ -629,23 +629,20 @@ export async function getOrGenerateHeroImages(): Promise<HeroImage[]> {
 
             for (let i = images.length; i < heroImagePrompts.length; i++) {
                 const prompt = heroImagePrompts[i];
-                console.log(`Generating image for prompt: "${prompt}"`);
+                const seed = i + 1; // Use a consistent seed
+                const imageUrl = `https://picsum.photos/seed/${seed}/1280/720`;
                 
                 try {
-                    const result = await generateImage({ prompt });
-                    if (result.imageUrl) {
-                        const newImage: Omit<HeroImage, '_id'> = {
-                            prompt: prompt,
-                            imageUrl: result.imageUrl,
-                            createdAt: new Date(),
-                        };
-                        const insertResult = await collection.insertOne(newImage);
-                        images.push({ ...newImage, _id: insertResult.insertedId });
-                        console.log(`Successfully generated and stored image ${i + 1}.`);
-                    }
+                    const newImage: Omit<HeroImage, '_id'> = {
+                        prompt: prompt,
+                        imageUrl: imageUrl,
+                        createdAt: new Date(),
+                    };
+                    const insertResult = await collection.insertOne(newImage);
+                    images.push({ ...newImage, _id: insertResult.insertedId });
+                    console.log(`Successfully generated and stored placeholder image ${i + 1}.`);
                 } catch (e) {
-                    console.error(`Failed to generate or store image ${i + 1}.`, e);
-                    // Continue to the next image if one fails
+                    console.error(`Failed to store placeholder image ${i + 1}.`, e);
                 }
             }
              revalidatePath('/');

@@ -31,7 +31,7 @@ export default function AIToolsPage() {
   const handleCopy = () => {
     if (state.imageUrl) {
       navigator.clipboard.writeText(state.imageUrl);
-      toast({ title: "Copied!", description: "Image Data URL copied to clipboard." });
+      toast({ title: "Copied!", description: "Image URL copied to clipboard." });
     }
   };
 
@@ -65,7 +65,7 @@ export default function AIToolsPage() {
       <Card>
         <CardHeader>
           <CardTitle>Generated Image</CardTitle>
-          <CardDescription>Your generated image will appear here. Copy the Data URL to use it.</CardDescription>
+          <CardDescription>Your generated image will appear here. Copy the URL to use it.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center text-center p-6 space-y-4 min-h-[300px] bg-muted/50 rounded-lg">
           {state.imageUrl ? (
@@ -80,7 +80,7 @@ export default function AIToolsPage() {
               </div>
               <Button onClick={handleCopy} variant="outline" className="w-full">
                 <Copy className="mr-2 h-4 w-4" />
-                Copy Image Data URL
+                Copy Image URL
               </Button>
               <p className="text-xs text-muted-foreground">Paste this URL into the 'Image URL' field when creating a post.</p>
             </>
