@@ -1,18 +1,16 @@
 
-'use client';
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowRight, Leaf, Mic, Rocket, Banknote, BrainCircuit, X, Info, Quote } from 'lucide-react';
 import Link from 'next/link';
-import { getTestimonials } from './actions';
-import { Testimonial } from '@/lib/types';
-import { useEffect, useState } from 'react';
+import { getTestimonials, getOrGenerateHeroImages } from './actions';
+import { Testimonial, HeroImage } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { useToast } from '@/hooks/use-toast';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import Image from 'next/image';
+import { WelcomeTour } from './welcome-tour';
+
 
 const coreSectors = [
   { 
@@ -47,95 +45,53 @@ const coreSectors = [
   }
 ];
 
-function WelcomeTour() {
-  const [isOpen, setIsOpen] = useState(false);
-  const { toast } = useToast();
 
-  const siteFacts = [
-    { title: 'Our Mission', description: 'Serleo Globals aims to unleash potential and inspire futures for youth leaders.' },
-    { title: 'Did you know?', description: 'We have programs spanning across 5 core sectors, from Agriventure to Wellness.' },
-    { title: 'Community Goal', description: 'We aim to train over 5,000 youth by the end of 2026.' },
-    { title: 'Get Involved!', description: 'Visit our "Partner With Us" page to see how you can collaborate.' },
-  ];
-
-  useEffect(() => {
-    const hasBeenWelcomed = localStorage.getItem('serleoWelcomeDismissed');
-    if (hasBeenWelcomed !== 'true') {
-      setIsOpen(true);
-    }
-
-    const notificationInterval = setInterval(() => {
-      const randomFact = siteFacts[Math.floor(Math.random() * siteFacts.length)];
-      toast(randomFact);
-    }, 20000); // every 20 seconds
-
-    return () => clearInterval(notificationInterval);
-  }, [toast]);
-
-  const handleDismiss = () => {
-    localStorage.setItem('serleoWelcomeDismissed', 'true');
-    setIsOpen(false);
-  };
-
-  if (!isOpen) {
-    return null;
-  }
-
-  return (
-    <Alert className="container my-4 relative bg-primary/10 border-primary/20 text-primary-foreground">
-       <Info className="h-4 w-4 !text-primary" />
-      <AlertTitle className="font-bold text-primary">Welcome to Serleo Globals!</AlertTitle>
-      <AlertDescription className="text-primary/80">
-        Explore our <a href="#sectors" className="font-semibold underline">Core Sectors</a>, learn about our <a href="/projects" className="font-semibold underline">Projects & Events</a>, or <a href="/signup" className="font-semibold underline">Join the Community</a> to get started.
-      </AlertDescription>
-      <button onClick={handleDismiss} className="absolute top-2 right-2 p-1 rounded-full hover:bg-primary/20 transition-colors">
-        <X className="h-4 w-4 text-primary" />
-        <span className="sr-only">Dismiss</span>
-      </button>
-    </Alert>
-  );
-}
-
-
-export default function Home() {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-
-  useEffect(() => {
-    getTestimonials().then(setTestimonials);
-  }, []);
+export default async function Home() {
+  const testimonials = await getTestimonials();
+  const heroImages = await getOrGenerateHeroImages();
 
   return (
     <div className="flex flex-col">
       <WelcomeTour />
       <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center text-center text-primary-foreground bg-primary overflow-hidden">
         <div className="absolute inset-0 z-0 bg-background">
-           <Carousel>
+           <Carousel
+            opts={{ loop: true, }}
+            className="w-full h-full"
+           >
               <CarouselContent>
-                <CarouselItem>
-                  <div className="h-screen w-full flex items-center justify-center bg-blue-100">
-                    <svg viewBox="0 0 100 50" className="w-full h-full"><text x="50" y="25" textAnchor="middle" dy=".3em" fontSize="10">Agriventure</text></svg>
-                  </div>
-                </CarouselItem>
-                <CarouselItem>
-                   <div className="h-screen w-full flex items-center justify-center bg-orange-100">
-                    <svg viewBox="0 0 100 50" className="w-full h-full"><text x="50" y="25" textAnchor="middle" dy=".3em" fontSize="10">Arts & Events</text></svg>
-                  </div>
-                </CarouselItem>
-                <CarouselItem>
-                  <div className="h-screen w-full flex items-center justify-center bg-green-100">
-                    <svg viewBox="0 0 100 50" className="w-full h-full"><text x="50" y="25" textAnchor="middle" dy=".3em" fontSize="10">Startups</text></svg>
-                  </div>
-                </CarouselItem>
+                {heroImages.length > 0 ? (
+                  heroImages.map((image: HeroImage, index: number) => (
+                    <CarouselItem key={image._id.toString() ?? index}>
+                      <div className="relative h-[80vh] w-full">
+                        <Image
+                          src={image.imageUrl}
+                          alt={image.prompt}
+                          fill
+                          priority={index === 0}
+                          className="object-cover"
+                        />
+                         <div className="absolute inset-0 bg-black/30" />
+                      </div>
+                    </CarouselItem>
+                  ))
+                ) : (
+                   <CarouselItem>
+                    <div className="h-screen w-full flex items-center justify-center bg-blue-100">
+                      <svg viewBox="0 0 100 50" className="w-full h-full"><text x="50" y="25" textAnchor="middle" dy=".3em" fontSize="6">Generating images...</text></svg>
+                    </div>
+                  </CarouselItem>
+                )}
               </CarouselContent>
             </Carousel>
         </div>
          <div className="absolute inset-0 z-10 bg-gradient-to-t from-background via-transparent to-transparent" />
          
          <div className="z-20 container px-4 md:px-6">
-          <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tighter text-primary">
+          <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tighter text-white" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}>
             Welcome to Serleo Globals
           </h1>
-          <p className="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-foreground/80">
+          <p className="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-primary-foreground/90" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.7)' }}>
             A multidimensional youth-driven enterprise committed to empowering the next generation through innovation, creativity, investment, and purpose. Serleo Globals is not just a brand; it's a global youth movement.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
