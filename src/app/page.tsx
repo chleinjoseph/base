@@ -4,7 +4,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ArrowRight, Leaf, Mic, Rocket, Banknote, BrainCircuit, X, Info } from 'lucide-react';
+import { ArrowRight, Leaf, Mic, Rocket, Banknote, BrainCircuit, X, Info, Quote } from 'lucide-react';
 import Link from 'next/link';
 import { getTestimonials } from './actions';
 import { Testimonial } from '@/lib/types';
@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import Image from 'next/image';
 
 const coreSectors = [
   { 
@@ -168,8 +169,41 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <section id="founder" className="py-16 md:py-24 bg-secondary">
+        <div className="container px-4 md:px-6">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="relative h-96 w-full flex items-center justify-center rounded-lg shadow-md overflow-hidden bg-background">
+              <Image
+                src="https://picsum.photos/seed/ceo/400/600"
+                alt="Chlein Joseph Odhiambo"
+                width={400}
+                height={600}
+                className="object-cover h-full w-full"
+                data-ai-hint="professional portrait"
+              />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent" />
+            </div>
+            <div className="space-y-4">
+              <h2 className="text-3xl font-bold text-primary font-headline">A Word From Our Founder</h2>
+              <div className="flex items-center gap-4">
+                  <div>
+                      <p className="font-bold text-lg text-foreground">Chlein Joseph Odhiambo</p>
+                      <p className="text-sm text-accent font-semibold">CEO & Founder, Serleo Globals</p>
+                  </div>
+              </div>
+              <div className="relative">
+                  <Quote className="absolute -top-2 -left-4 h-10 w-10 text-primary/10" />
+                  <p className="text-lg text-muted-foreground z-10 relative">
+                      "Our mission is to build more than just businesses; we are building ecosystems of opportunity. We believe in the limitless potential of youth and are committed to providing the platforms, tools, and mentorship needed to turn their vision into reality. Together, we are not just inspiring futures—we are building them."
+                  </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       
-      <section id="sectors" className="py-16 md:py-24 bg-secondary">
+      <section id="sectors" className="py-16 md:py-24 bg-background">
         <div className="container px-4 md:px-6">
            <div className="text-center">
             <h2 className="text-3xl font-bold font-headline text-primary">Our Core Sectors</h2>
@@ -198,7 +232,7 @@ export default function Home() {
       </section>
 
       {testimonials.length > 0 && (
-        <section id="impact" className="py-16 md:py-24 bg-background">
+        <section id="impact" className="py-16 md:py-24 bg-secondary">
           <div className="container px-4 md:px-6">
             <div className="text-center">
               <h2 className="text-3xl font-bold font-headline text-primary">Our Impact</h2>
@@ -231,3 +265,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
