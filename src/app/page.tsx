@@ -139,7 +139,7 @@ export default async function Home() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative h-96 w-full flex items-center justify-center rounded-lg shadow-md overflow-hidden bg-background">
               <Image
-                src="https://picsum.photos/seed/ceo/400/600"
+                src="https://i.ibb.co/jv0sCQr1/IMG-20250913-WA0006.jpg"
                 alt="Chlein Joseph Odhiambo"
                 width={400}
                 height={600}
