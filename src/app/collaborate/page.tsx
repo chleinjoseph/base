@@ -5,13 +5,14 @@ import { useFormStatus } from 'react-dom';
 import { useActionState } from 'react';
 import { handlePartnershipForm } from '@/app/actions';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Handshake, PenSquare, Briefcase } from 'lucide-react';
+import { Loader2, Handshake, PenSquare, Briefcase, Award, Medal, Gem } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -34,6 +35,52 @@ const CollaborationCard = ({ icon: Icon, title, children }: { icon: React.Elemen
         <CardContent className="text-muted-foreground">
             {children}
         </CardContent>
+    </Card>
+);
+
+const TierCard = ({ icon: Icon, title, amount, description, benefits }: { icon: React.ElementType, title: string, amount: string, description: string, benefits: string[] }) => (
+    <Card className="flex flex-col">
+        <CardHeader className="items-center text-center">
+            <div className="p-4 bg-accent/20 rounded-full mb-4">
+                 <Icon className="h-10 w-10 text-accent" />
+            </div>
+            <CardTitle className="text-2xl font-headline">{title}</CardTitle>
+            <CardDescription className="font-bold text-primary text-3xl">{amount}</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-grow">
+            <p className="text-center text-muted-foreground mb-6">{description}</p>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+                {benefits.map((benefit, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                        <Handshake className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                        <span>{benefit}</span>
+                    </li>
+                ))}
+            </ul>
+        </CardContent>
+        <CardFooter>
+             <Dialog>
+                <DialogTrigger asChild>
+                    <Button className="w-full">Contribute Now</Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>M-Pesa Global Payment</DialogTitle>
+                        <DialogDescription>
+                            Thank you for your contribution! Please use the following details to complete your payment.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                         <div className="p-4 bg-secondary rounded-lg">
+                            <h4 className="font-bold text-lg mb-2">Pay to:</h4>
+                            <p className="font-mono"><strong>Name:</strong> Chlein Joseph Odhiambo</p>
+                            <p className="font-mono"><strong>Phone:</strong> 0719595258</p>
+                        </div>
+                        <p className="text-sm text-muted-foreground">Once payment is complete, it will be reflected in our systems. We appreciate your support in empowering youth globally.</p>
+                    </div>
+                </DialogContent>
+            </Dialog>
+        </CardFooter>
     </Card>
 );
 
@@ -89,6 +136,51 @@ export default function CollaboratePage() {
             </CollaborationCard>
         </div>
       </section>
+
+      <section id="partnership-tiers" className="mt-20">
+         <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold font-headline text-primary">Partnership Tiers</h2>
+            <p className="mt-2 max-w-2xl mx-auto text-lg text-muted-foreground">
+              Choose a tier that aligns with your contribution goals and help us scale our impact.
+            </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <TierCard 
+                icon={Award}
+                title="Bronze Partner"
+                amount="Ksh 1,000"
+                description="Become a foundational supporter of our mission."
+                benefits={[
+                    "Acknowledgement on our website.",
+                    "Access to our quarterly newsletter.",
+                    "Invitation to our annual general meeting."
+                ]}
+            />
+             <TierCard 
+                icon={Medal}
+                title="Silver Partner"
+                amount="Ksh 5,000"
+                description="Help us fuel specific projects and initiatives."
+                 benefits={[
+                    "All Bronze benefits.",
+                    "Logo placement on event materials.",
+                    "A dedicated social media shout-out."
+                ]}
+            />
+             <TierCard 
+                icon={Gem}
+                title="Gold Partner"
+                amount="Ksh 10,000"
+                description="Become a strategic partner in our growth."
+                 benefits={[
+                    "All Silver benefits.",
+                    "A feature in our annual impact report.",
+                    "Opportunity to co-host a workshop or event."
+                ]}
+            />
+        </div>
+      </section>
+
 
       <section id="contact" className="mt-20">
         <div className="max-w-2xl mx-auto">
