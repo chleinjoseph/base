@@ -14,6 +14,7 @@ export function WelcomeTour() {
     { title: 'Our Mission', description: 'Serleo Globals aims to unleash potential and inspire futures for youth leaders.' },
     { title: 'Did you know?', description: 'We have programs spanning across 5 core sectors, from Agriventure to Wellness.' },
     { title: 'Community Goal', description: 'We aim to train over 5,000 youth by the end of 2026.' },
+    { title: 'We are hiring!', description: 'Serleo is looking for a Personal Assistant and a General Manager. Contact us to apply.' },
     { title: 'Get Involved!', description: 'Visit our "Partner With Us" page to see how you can collaborate.' },
   ];
 

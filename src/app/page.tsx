@@ -111,6 +111,14 @@ export default async function Home() {
 
       <section id="about" className="py-16 md:py-24 bg-background">
         <div className="container px-4 md:px-6">
+          <Alert className="mb-12 border-accent text-accent-foreground bg-accent/10">
+            <Info className="h-5 w-5 !text-accent" />
+            <AlertTitle className="font-bold text-accent">We're Hiring!</AlertTitle>
+            <AlertDescription>
+              Serleo Globals is looking for a Personal Assistant (PA) and a General Manager to join our growing team. If you are passionate about youth empowerment and have a drive for excellence, we want to hear from you. 
+              <Link href="/collaborate" className="font-semibold underline ml-2">Contact Us &rarr;</Link>
+            </AlertDescription>
+          </Alert>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl font-bold text-primary font-headline">About Serleo Globals</h2>
