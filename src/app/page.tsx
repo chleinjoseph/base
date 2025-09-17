@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowRight, Leaf, Mic, Rocket, Banknote, BrainCircuit, X, Info, Quote } from 'lucide-react';
 import Link from 'next/link';
-import { getTestimonials, getOrGenerateAboutImage } from './actions';
+import { getTestimonials, getOrGenerateAboutImage, getOrGenerateFounderImage } from './actions';
 import { Testimonial } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
@@ -60,6 +60,7 @@ const heroImages = [
 export default async function Home() {
   const testimonials = await getTestimonials();
   const aboutImageUrl = await getOrGenerateAboutImage();
+  const founderImageUrl = await getOrGenerateFounderImage();
 
   return (
     <div className="flex flex-col">
@@ -147,12 +148,12 @@ export default async function Home() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative h-96 w-full flex items-center justify-center rounded-lg shadow-md overflow-hidden bg-background">
               <Image
-                src="https://i.ibb.co/jv0sCQr1/IMG-20250913-WA0006.jpg"
-                alt="Chlein Joseph Odhiambo"
+                src={founderImageUrl}
+                alt="Chlein Joseph Odhiambo, CEO of Serleo Globals"
                 width={400}
                 height={600}
                 className="object-cover h-full w-full"
-                data-ai-hint="professional portrait"
+                data-ai-hint="professional portrait ceo"
               />
                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent" />
             </div>

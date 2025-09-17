@@ -46,11 +46,33 @@ const generateImageFlow = ai.defineFlow(
     outputSchema: GenerateImageOutputSchema,
   },
   async ({ prompt }) => {
-    // WORKAROUND: Use a placeholder image service instead of Imagen
-    // because the project doesn't have a billing account enabled.
-    const seed = simpleHash(prompt);
-    const imageUrl = `https://picsum.photos/seed/${seed}/1024/768`;
+    try {
+        const { media } = await ai.generate({
+            model: 'googleai/imagen-4.0-fast-generate-001',
+            prompt,
+        });
 
-    return { imageUrl };
+        if (!media?.url) {
+            throw new Error("Image generation failed to return a URL.");
+        }
+        
+        // The Imagen model returns a data URI.
+        // For simplicity, we will assume it's always a data URI and return it.
+        // In a real-world scenario, you might want to upload this to a bucket
+        // and get a public URL, but that's out of scope here.
+        return { imageUrl: media.url };
+
+    } catch (error) {
+        console.warn("AI image generation failed. Falling back to placeholder.", error);
+        
+        // WORKAROUND: Use a placeholder image service instead of Imagen
+        // if the API call fails (e.g., no billing account).
+        const seed = simpleHash(prompt);
+        const imageUrl = `https://picsum.photos/seed/${seed}/1024/768`;
+
+        return { imageUrl };
+    }
   }
 );
+
+    

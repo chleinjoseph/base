@@ -630,7 +630,7 @@ export async function getOrGenerateAboutImage(): Promise<string> {
         console.log("Generating new 'About Us' image...");
         // If it doesn't exist, generate it
         const result = await generateImage({ 
-            prompt: "A stylized, abstract wireframe globe representing global connection and growth, professional logo style, clean background." 
+            prompt: "A stylized, abstract wireframe globe representing global connection and growth, professional logo style, clean background, blue and orange tones." 
         });
 
         if (result.imageUrl) {
@@ -651,5 +651,43 @@ export async function getOrGenerateAboutImage(): Promise<string> {
         return "https://picsum.photos/seed/about_error/800/600";
     }
 }
+
+export async function getOrGenerateFounderImage(): Promise<string> {
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const siteImagesCollection = db.collection("site_images");
+
+        const existingImage = await siteImagesCollection.findOne({ key: 'founder_image' });
+
+        if (existingImage && existingImage.imageUrl) {
+            return existingImage.imageUrl;
+        }
+
+        console.log("Generating new 'Founder' image...");
+        // If it doesn't exist, generate it
+        const result = await generateImage({ 
+            prompt: "Professional headshot of a confident, visionary young black man, CEO of a global youth empowerment organization. He is wearing a sharp suit, looking directly at the camera with a friendly and determined expression. The background is a modern office setting with soft, natural lighting. High-resolution, photorealistic." 
+        });
+
+        if (result.imageUrl) {
+            await siteImagesCollection.updateOne(
+                { key: 'founder_image' },
+                { $set: { imageUrl: result.imageUrl, createdAt: new Date() } },
+                { upsert: true }
+            );
+            return result.imageUrl;
+        }
+
+        // Fallback to a default placeholder if generation fails
+        return "https://i.ibb.co/jv0sCQr1/IMG-20250913-WA0006.jpg";
+
+    } catch (error) {
+        console.error("Error in getOrGenerateFounderImage:", error);
+        // Fallback to a default placeholder on error
+        return "https://i.ibb.co/jv0sCQr1/IMG-20250913-WA0006.jpg";
+    }
+}
+    
 
     
