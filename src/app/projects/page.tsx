@@ -79,7 +79,7 @@ export default function ProjectsPage() {
                     <Image
                       src={post.imageUrl}
                       alt={post.title}
-                      layout="fill"
+                      fill
                       objectFit="cover"
                       data-ai-hint={post.aiHint}
                       className="transition-transform duration-500 group-hover:scale-105"

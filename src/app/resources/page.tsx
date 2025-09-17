@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -7,8 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Search, Loader2 } from 'lucide-react';
-import Image from 'next/image';
+import { ArrowRight, Search, Loader2, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 
 const categories = ['All', 'Business', 'Creativity', 'Wellness', 'Finance'];
@@ -68,26 +68,18 @@ export default function ResourcesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {resources.map((resource) => (
               <Card key={resource._id.toString()} className="flex flex-col overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <CardHeader className="p-0">
-                  <div className="relative h-48 w-full">
-                    <Image
-                      src={resource.imageUrl}
-                      alt={resource.title}
-                      layout="fill"
-                      objectFit="cover"
-                      data-ai-hint={resource.aiHint}
-                    />
-                  </div>
-                  <div className="p-6">
-                      <Badge variant="secondary" className="mb-2">{resource.type}</Badge>
-                      <CardTitle className="text-xl font-headline">{resource.title}</CardTitle>
-                  </div>
+                <CardHeader>
+                    <div className='flex justify-between items-start'>
+                        <Badge variant="secondary">{resource.type}</Badge>
+                        <BookOpen className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <CardTitle className="text-xl font-headline pt-4">{resource.title}</CardTitle>
                 </CardHeader>
-                <CardContent className="flex-1 px-6">
+                <CardContent className="flex-1">
                   <p className="text-muted-foreground line-clamp-3">{resource.description}</p>
                 </CardContent>
-                <CardFooter className="px-6 pb-6 mt-auto">
-                  <Button asChild className="w-full">
+                <CardFooter>
+                  <Button asChild variant="secondary" className="w-full">
                     <Link href={`/resources/${resource._id}`}>
                       Read More <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
