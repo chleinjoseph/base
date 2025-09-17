@@ -135,7 +135,7 @@ export default async function Home() {
                     src={aboutImageUrl}
                     alt="Abstract image representing Serleo Globals' mission"
                     fill
-                    className="object-cover"
+                    className="object-contain"
                     data-ai-hint="abstract globe connection"
                 />
             </div>
