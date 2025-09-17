@@ -46,12 +46,12 @@ const StrategicPartnerCard = () => (
             <p className="text-5xl font-bold mt-2 mb-4">Ksh 50,000</p>
             <p className="text-sm text-primary-foreground/80">A one-time investment to fuel our core mission and scale our impact.</p>
         </div>
-        <div className="md:w-2/3">
+        <div className="md:w-2/3 flex flex-col">
             <CardHeader>
                 <CardTitle className="text-2xl font-headline text-primary">Exclusive Partnership Benefits</CardTitle>
                 <CardDescription>As a Strategic Partner, you become a key stakeholder in our vision for youth empowerment.</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
                 <ul className="space-y-3 text-muted-foreground">
                     {[
                         "Prominent logo placement on our website and all event materials.",
