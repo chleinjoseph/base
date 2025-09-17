@@ -46,10 +46,3 @@ export type Message = {
     userRole: 'user' | 'admin' | 'superadmin';
     createdAt: Date;
 }
-
-export type HeroImage = {
-    _id: string | ObjectId;
-    prompt: string;
-    imageUrl: string;
-    createdAt: Date;
-}

@@ -4,7 +4,7 @@
 import { serleoAssistant, summarizeSummitContent, generateImage } from "@/ai/flows";
 import { z } from "zod";
 import clientPromise from "@/lib/mongodb";
-import { partnershipInquiry, User, Post, Testimonial, Message, HeroImage } from "@/lib/types";
+import { partnershipInquiry, User, Post, Testimonial, Message } from "@/lib/types";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 
@@ -607,50 +607,5 @@ export async function handleCreateMessage(prevState: any, formData: FormData) {
     } catch (e) {
         console.error(e);
         return { message: "Failed to send message.", errors: {}, success: false };
-    }
-}
-
-// Hero Image Actions
-const heroImagePrompts = [
-    "A diverse group of empowered African youth collaborating on innovative projects, with a bright, optimistic, and modern aesthetic. Cinematic, vibrant, professional photography.",
-    "A stunning shot of a modern, sustainable farm in Africa run by young entrepreneurs using technology like tablets and drones. Clean, bright, and forward-looking. Professional photography.",
-];
-
-export async function getOrGenerateHeroImages(): Promise<HeroImage[]> {
-    try {
-        const client = await clientPromise;
-        const db = client.db("TaxForwardSummit");
-        const collection = db.collection<HeroImage>("hero_images");
-        
-        let images = await collection.find({}).sort({ createdAt: 1 }).toArray();
-
-        if (images.length < 2) {
-            console.log(`Found ${images.length} hero images. Generating more...`);
-
-            for (let i = images.length; i < heroImagePrompts.length; i++) {
-                const prompt = heroImagePrompts[i];
-                const seed = i + 1; // Use a consistent seed
-                const imageUrl = `https://picsum.photos/seed/${seed}/1280/720`;
-                
-                try {
-                    const newImage: Omit<HeroImage, '_id'> = {
-                        prompt: prompt,
-                        imageUrl: imageUrl,
-                        createdAt: new Date(),
-                    };
-                    const insertResult = await collection.insertOne(newImage);
-                    images.push({ ...newImage, _id: insertResult.insertedId });
-                    console.log(`Successfully generated and stored placeholder image ${i + 1}.`);
-                } catch (e) {
-                    console.error(`Failed to store placeholder image ${i + 1}.`, e);
-                }
-            }
-             revalidatePath('/');
-        }
-
-        return images.map(img => ({ ...img, _id: img._id.toString() })) as HeroImage[];
-    } catch (e) {
-        console.error("Failed to fetch or generate hero images:", e);
-        return [];
     }
 }

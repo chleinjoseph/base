@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowRight, Leaf, Mic, Rocket, Banknote, BrainCircuit, X, Info, Quote } from 'lucide-react';
 import Link from 'next/link';
-import { getTestimonials, getOrGenerateHeroImages } from './actions';
-import { Testimonial, HeroImage } from '@/lib/types';
+import { getTestimonials } from './actions';
+import { Testimonial } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import Image from 'next/image';
@@ -45,10 +45,20 @@ const coreSectors = [
   }
 ];
 
+const heroImages = [
+    {
+        src: "https://i.ibb.co/ymnGRvGt/image-1758088152612.jpg",
+        alt: "A diverse group of empowered African youth collaborating on innovative projects.",
+    },
+    {
+        src: "https://i.ibb.co/yFsrNx3m/file-00000000e21861f9a0e3f8f378cc4ea8.png",
+        alt: "A stunning shot of a modern, sustainable farm in Africa run by young entrepreneurs.",
+    }
+]
+
 
 export default async function Home() {
   const testimonials = await getTestimonials();
-  const heroImages = await getOrGenerateHeroImages();
 
   return (
     <div className="flex flex-col">
@@ -60,13 +70,12 @@ export default async function Home() {
             className="w-full h-full"
            >
               <CarouselContent>
-                {heroImages.length > 0 ? (
-                  heroImages.map((image: HeroImage, index: number) => (
-                    <CarouselItem key={image._id.toString() ?? index}>
+                {heroImages.map((image, index) => (
+                    <CarouselItem key={index}>
                       <div className="relative h-[80vh] w-full">
                         <Image
-                          src={image.imageUrl}
-                          alt={image.prompt}
+                          src={image.src}
+                          alt={image.alt}
                           fill
                           priority={index === 0}
                           className="object-cover"
@@ -74,14 +83,7 @@ export default async function Home() {
                          <div className="absolute inset-0 bg-black/30" />
                       </div>
                     </CarouselItem>
-                  ))
-                ) : (
-                   <CarouselItem>
-                    <div className="h-screen w-full flex items-center justify-center bg-blue-100">
-                      <svg viewBox="0 0 100 50" className="w-full h-full"><text x="50" y="25" textAnchor="middle" dy=".3em" fontSize="6">Generating images...</text></svg>
-                    </div>
-                  </CarouselItem>
-                )}
+                  ))}
               </CarouselContent>
             </Carousel>
         </div>
