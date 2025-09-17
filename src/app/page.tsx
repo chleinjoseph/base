@@ -87,7 +87,7 @@ export default async function Home() {
               </CarouselContent>
             </Carousel>
         </div>
-         <div className="absolute inset-0 z-10 bg-gradient-to-t from-background via-transparent to-transparent" />
+         <div className="absolute inset-0 z-10 bg-gradient-to-t from-background via-black/20 to-transparent" />
          
          <div className="z-20 container px-4 md:px-6">
           <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tighter text-white" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}>
@@ -129,8 +129,8 @@ export default async function Home() {
               </p>
             </div>
              <div className="relative h-80 w-full flex items-center justify-center bg-secondary rounded-lg shadow-md p-8 overflow-hidden">
-                <div className="absolute -inset-2 bg-gradient-to-br from-accent/20 via-primary/20 to-transparent animate-[spin_10s_linear_infinite]"/>
-                <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="h-32 w-32 text-primary opacity-20 relative z-10"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 22c-5.523 0-10-4.477-10-10S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zM12 12c-5.523 0-10-4.477 0-10S22 6.477 12 12zM2 12c5.523 0 10 4.477 0 10S-3.523 16.477 2 12z"/></svg>
+                <div className="absolute -inset-2 bg-gradient-to-br from-accent/20 via-primary/20 to-transparent"/>
+                <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="h-32 w-32 text-primary opacity-20 relative z-10"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"/><path d="M12 2c5.523 0 10 4.477 10 10M12 22c5.523 0-10-4.477-10-10"/><path d="M2 12c5.523 0 10 4.477 10 10M22 12c-5.523 0-10 4.477-10 10"/><path d="M12 12c5.523 0 10-4.477 0 10M12 12c-5.523 0 0-10-10-10"/><path d="M12 12c-5.523 0-10 4.477 0 10M12 12c5.523 0 0-10 10-10"/></svg>
             </div>
           </div>
         </div>
@@ -158,8 +158,8 @@ export default async function Home() {
                       <p className="text-sm text-accent font-semibold">CEO & Founder, Serleo Globals</p>
                   </div>
               </div>
-              <div className="relative">
-                  <Quote className="absolute -top-2 -left-4 h-10 w-10 text-primary/10" />
+              <div className="relative p-4 bg-background/50 rounded-lg">
+                  <Quote className="absolute -top-2 -left-2 h-10 w-10 text-primary/10" />
                   <p className="text-lg text-muted-foreground z-10 relative">
                       "Our mission is to build more than just businesses; we are building ecosystems of opportunity. We believe in the limitless potential of youth and are committed to providing the platforms, tools, and mentorship needed to turn their vision into reality. Together, we are not just inspiring futures—we are building them."
                   </p>
@@ -179,7 +179,7 @@ export default async function Home() {
           </div>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {coreSectors.map((sector) => (
-               <Card key={sector.title} className="text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group bg-card/50 backdrop-blur-sm border-border/50">
+               <Card key={sector.title} className="text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group bg-card hover:bg-secondary/50">
                  <Link href={sector.href} className="flex flex-col h-full">
                     <CardHeader className="items-center">
                       <div className="p-4 bg-accent/20 rounded-full transition-all duration-300 group-hover:scale-110 group-hover:bg-accent/30">
@@ -208,7 +208,7 @@ export default async function Home() {
             </div>
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
               {testimonials.map((testimonial: Testimonial) => (
-                <Card key={testimonial._id.toString()} className="flex flex-col justify-between transition-all duration-300 hover:shadow-lg bg-card/50 backdrop-blur-sm border-border/50">
+                <Card key={testimonial._id.toString()} className="flex flex-col justify-between transition-all duration-300 hover:shadow-lg bg-card">
                   <CardContent className="pt-6">
                     <p className="text-muted-foreground italic">"{testimonial.quote}"</p>
                   </CardContent>
@@ -231,7 +231,5 @@ export default async function Home() {
     </div>
   );
 }
-
-    
 
     
