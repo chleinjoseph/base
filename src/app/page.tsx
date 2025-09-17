@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowRight, Leaf, Mic, Rocket, Banknote, BrainCircuit, X, Info, Quote } from 'lucide-react';
 import Link from 'next/link';
-import { getTestimonials } from './actions';
+import { getTestimonials, getOrGenerateAboutImage } from './actions';
 import { Testimonial } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
@@ -59,6 +59,7 @@ const heroImages = [
 
 export default async function Home() {
   const testimonials = await getTestimonials();
+  const aboutImageUrl = await getOrGenerateAboutImage();
 
   return (
     <div className="flex flex-col">
@@ -128,9 +129,14 @@ export default async function Home() {
                 Rooted in transformational leadership and strategic execution, Serleo operates across key sectors to inspire growth, financial independence, and personal mastery. We blend creativity with business, impact with sustainability, and vision with execution.
               </p>
             </div>
-             <div className="relative h-80 w-full flex items-center justify-center bg-secondary rounded-lg shadow-md p-8 overflow-hidden">
-                <div className="absolute -inset-2 bg-gradient-to-br from-accent/20 via-primary/20 to-transparent"/>
-                <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="h-32 w-32 text-primary opacity-20 relative z-10"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"/><path d="M12 2c5.523 0 10 4.477 10 10M12 22c5.523 0-10-4.477-10-10"/><path d="M2 12c5.523 0 10 4.477 10 10M22 12c-5.523 0-10 4.477-10 10"/><path d="M12 12c5.523 0 10-4.477 0 10M12 12c-5.523 0 0-10-10-10"/><path d="M12 12c-5.523 0-10 4.477 0 10M12 12c5.523 0 0-10 10-10"/></svg>
+             <div className="relative h-80 w-full rounded-lg shadow-md overflow-hidden bg-secondary">
+                <Image
+                    src={aboutImageUrl}
+                    alt="Abstract image representing Serleo Globals' mission"
+                    fill
+                    className="object-cover"
+                    data-ai-hint="abstract globe connection"
+                />
             </div>
           </div>
         </div>

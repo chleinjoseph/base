@@ -4,7 +4,7 @@
 import { serleoAssistant, summarizeSummitContent, generateImage } from "@/ai/flows";
 import { z } from "zod";
 import clientPromise from "@/lib/mongodb";
-import { partnershipInquiry, User, Post, Testimonial, Message } from "@/lib/types";
+import { partnershipInquiry, User, Post, Testimonial, Message, HeroImage } from "@/lib/types";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 
@@ -344,6 +344,9 @@ export async function handleCreatePost(prevState: any, formData: FormData) {
 
         revalidatePath('/resources');
         revalidatePath('/admin/blog');
+        revalidatePath('/projects');
+        revalidatePath('/admin/projects');
+
         return { message: "Post created successfully.", errors: {}, success: true };
     } catch (e) {
         console.error(e);
@@ -360,6 +363,8 @@ export async function handleDeletePost(postId: string) {
         
         revalidatePath('/resources');
         revalidatePath('/admin/blog');
+        revalidatePath('/projects');
+        revalidatePath('/admin/projects');
         return { message: "Post deleted successfully.", success: true };
     } catch(e) {
         console.error(e);
@@ -609,3 +614,42 @@ export async function handleCreateMessage(prevState: any, formData: FormData) {
         return { message: "Failed to send message.", errors: {}, success: false };
     }
 }
+
+export async function getOrGenerateAboutImage(): Promise<string> {
+    try {
+        const client = await clientPromise;
+        const db = client.db("TaxForwardSummit");
+        const siteImagesCollection = db.collection("site_images");
+
+        const existingImage = await siteImagesCollection.findOne({ key: 'about_us_image' });
+
+        if (existingImage && existingImage.imageUrl) {
+            return existingImage.imageUrl;
+        }
+
+        console.log("Generating new 'About Us' image...");
+        // If it doesn't exist, generate it
+        const result = await generateImage({ 
+            prompt: "A stylized, abstract wireframe globe representing global connection and growth, professional logo style, clean background." 
+        });
+
+        if (result.imageUrl) {
+            await siteImagesCollection.updateOne(
+                { key: 'about_us_image' },
+                { $set: { imageUrl: result.imageUrl, createdAt: new Date() } },
+                { upsert: true }
+            );
+            return result.imageUrl;
+        }
+
+        // Fallback to a default placeholder if generation fails
+        return "https://picsum.photos/seed/about/800/600";
+
+    } catch (error) {
+        console.error("Error in getOrGenerateAboutImage:", error);
+        // Fallback to a default placeholder on error
+        return "https://picsum.photos/seed/about_error/800/600";
+    }
+}
+
+    

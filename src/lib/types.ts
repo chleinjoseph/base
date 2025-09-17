@@ -46,3 +46,11 @@ export type Message = {
     userRole: 'user' | 'admin' | 'superadmin';
     createdAt: Date;
 }
+
+export type HeroImage = {
+    _id: string | ObjectId;
+    imageUrl: string;
+    createdAt: Date;
+};
+
+    
