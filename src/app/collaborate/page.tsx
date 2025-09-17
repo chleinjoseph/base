@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Handshake, PenSquare, Briefcase, Award, Medal, Gem } from 'lucide-react';
+import { Loader2, Handshake, PenSquare, Briefcase, Award, Medal, Gem, Star } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -38,49 +38,59 @@ const CollaborationCard = ({ icon: Icon, title, children }: { icon: React.Elemen
     </Card>
 );
 
-const TierCard = ({ icon: Icon, title, amount, description, benefits }: { icon: React.ElementType, title: string, amount: string, description: string, benefits: string[] }) => (
-    <Card className="flex flex-col">
-        <CardHeader className="items-center text-center">
-            <div className="p-4 bg-accent/20 rounded-full mb-4">
-                 <Icon className="h-10 w-10 text-accent" />
-            </div>
-            <CardTitle className="text-2xl font-headline">{title}</CardTitle>
-            <CardDescription className="font-bold text-primary text-3xl">{amount}</CardDescription>
-        </CardHeader>
-        <CardContent className="flex-grow">
-            <p className="text-center text-muted-foreground mb-6">{description}</p>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-                {benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                        <Handshake className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
-                        <span>{benefit}</span>
-                    </li>
-                ))}
-            </ul>
-        </CardContent>
-        <CardFooter>
-             <Dialog>
-                <DialogTrigger asChild>
-                    <Button className="w-full">Contribute Now</Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>M-Pesa Global Payment</DialogTitle>
-                        <DialogDescription>
-                            Thank you for your contribution! Please use the following details to complete your payment.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4 py-4">
-                         <div className="p-4 bg-secondary rounded-lg">
-                            <h4 className="font-bold text-lg mb-2">Pay to:</h4>
-                            <p className="font-mono"><strong>Name:</strong> Chlein Joseph Odhiambo</p>
-                            <p className="font-mono"><strong>Phone:</strong> 0719595258</p>
+const StrategicPartnerCard = () => (
+    <Card className="flex flex-col md:flex-row overflow-hidden shadow-lg border-accent/50">
+        <div className="md:w-1/3 bg-primary text-primary-foreground p-8 flex flex-col justify-center items-center text-center">
+            <Gem className="h-16 w-16 mb-4" />
+            <h3 className="text-3xl font-bold font-headline">Strategic Partner</h3>
+            <p className="text-5xl font-bold mt-2 mb-4">Ksh 50,000</p>
+            <p className="text-sm text-primary-foreground/80">A one-time investment to fuel our core mission and scale our impact.</p>
+        </div>
+        <div className="md:w-2/3">
+            <CardHeader>
+                <CardTitle className="text-2xl font-headline text-primary">Exclusive Partnership Benefits</CardTitle>
+                <CardDescription>As a Strategic Partner, you become a key stakeholder in our vision for youth empowerment.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <ul className="space-y-3 text-muted-foreground">
+                    {[
+                        "Prominent logo placement on our website and all event materials.",
+                        "A dedicated feature in our annual impact report and quarterly newsletters.",
+                        "The opportunity to co-host a workshop or event aligned with your brand.",
+                        "Exclusive access to our talent pool for recruitment and collaboration.",
+                        "VIP invitations to all Serleo Globals signature events and networking forums."
+                    ].map((benefit, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                            <Star className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                            <span>{benefit}</span>
+                        </li>
+                    ))}
+                </ul>
+            </CardContent>
+            <CardFooter>
+                 <Dialog>
+                    <DialogTrigger asChild>
+                        <Button className="w-full" size="lg">Become a Strategic Partner</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>M-Pesa Global Payment</DialogTitle>
+                            <DialogDescription>
+                                Thank you for your amazing contribution! Please use the following details to complete your payment for approval.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                             <div className="p-4 bg-secondary rounded-lg">
+                                <h4 className="font-bold text-lg mb-2">Pay to:</h4>
+                                <p className="font-mono"><strong>Name:</strong> Chlein Joseph Odhiambo</p>
+                                <p className="font-mono"><strong>Phone:</strong> 0719595258</p>
+                            </div>
+                            <p className="text-sm text-muted-foreground">Once payment is complete, it will be reflected in our systems. We appreciate your support in empowering youth globally.</p>
                         </div>
-                        <p className="text-sm text-muted-foreground">Once payment is complete, it will be reflected in our systems. We appreciate your support in empowering youth globally.</p>
-                    </div>
-                </DialogContent>
-            </Dialog>
-        </CardFooter>
+                    </DialogContent>
+                </Dialog>
+            </CardFooter>
+        </div>
     </Card>
 );
 
@@ -133,51 +143,19 @@ export default function CollaboratePage() {
             </CollaborationCard>
              <CollaborationCard icon={Briefcase} title="Invest In Us">
               <p>Help us scale our impact. We are seeking investors who align with our vision for global youth empowerment.</p>
-            </CollaborationCard>
+            </Card>
         </div>
       </section>
 
       <section id="partnership-tiers" className="mt-20">
          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold font-headline text-primary">Partnership Tiers</h2>
+            <h2 className="text-3xl font-bold font-headline text-primary">Become a Strategic Partner</h2>
             <p className="mt-2 max-w-2xl mx-auto text-lg text-muted-foreground">
-              Choose a tier that aligns with your contribution goals and help us scale our impact.
+              Make a significant investment in the future of youth empowerment and unlock exclusive benefits.
             </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <TierCard 
-                icon={Award}
-                title="Bronze Partner"
-                amount="Ksh 1,000"
-                description="Become a foundational supporter of our mission."
-                benefits={[
-                    "Acknowledgement on our website.",
-                    "Access to our quarterly newsletter.",
-                    "Invitation to our annual general meeting."
-                ]}
-            />
-             <TierCard 
-                icon={Medal}
-                title="Silver Partner"
-                amount="Ksh 5,000"
-                description="Help us fuel specific projects and initiatives."
-                 benefits={[
-                    "All Bronze benefits.",
-                    "Logo placement on event materials.",
-                    "A dedicated social media shout-out."
-                ]}
-            />
-             <TierCard 
-                icon={Gem}
-                title="Gold Partner"
-                amount="Ksh 10,000"
-                description="Become a strategic partner in our growth."
-                 benefits={[
-                    "All Silver benefits.",
-                    "A feature in our annual impact report.",
-                    "Opportunity to co-host a workshop or event."
-                ]}
-            />
+        <div className="max-w-4xl mx-auto">
+            <StrategicPartnerCard />
         </div>
       </section>
 
@@ -187,7 +165,7 @@ export default function CollaboratePage() {
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="text-2xl font-headline">Get In Touch</CardTitle>
-              <CardDescription>Fill out the form below for bookings, sponsorships, and collaboration inquiries. Let's make an impact together.</CardDescription>
+              <CardDescription>Fill out the form below for bookings, sponsorships, and general collaboration inquiries. Let's make an impact together.</CardDescription>
             </CardHeader>
             <CardContent>
               <form action={dispatch} ref={formRef} className="space-y-4">
