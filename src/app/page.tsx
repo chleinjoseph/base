@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowRight, Leaf, Mic, Rocket, Banknote, BrainCircuit, X, Info, Quote } from 'lucide-react';
 import Link from 'next/link';
-import { getTestimonials, getOrGenerateAboutImage, getOrGenerateFounderImage } from './actions';
+import { getTestimonials } from './actions';
 import { Testimonial } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
@@ -59,8 +59,6 @@ const heroImages = [
 
 export default async function Home() {
   const testimonials = await getTestimonials();
-  const aboutImageUrl = await getOrGenerateAboutImage();
-  const founderImageUrl = await getOrGenerateFounderImage();
 
   return (
     <div className="flex flex-col">
@@ -123,21 +121,12 @@ export default async function Home() {
               <Link href="/collaborate" className="font-semibold underline ml-2">Contact Us &rarr;</Link>
             </AlertDescription>
           </Alert>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
+          <div className="grid md:grid-cols-1 gap-12 items-center">
+             <div className="text-center">
               <h2 className="text-3xl font-bold text-primary font-headline">About Serleo Globals</h2>
-              <p className="mt-4 text-lg text-muted-foreground">
+              <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
                 Rooted in transformational leadership and strategic execution, Serleo operates across key sectors to inspire growth, financial independence, and personal mastery. We blend creativity with business, impact with sustainability, and vision with execution.
               </p>
-            </div>
-             <div className="relative h-80 w-full rounded-lg shadow-md overflow-hidden bg-secondary">
-                <Image
-                    src={aboutImageUrl}
-                    alt="Abstract image representing Serleo Globals' mission"
-                    fill
-                    className="object-contain"
-                    data-ai-hint="abstract globe connection"
-                />
             </div>
           </div>
         </div>
@@ -148,7 +137,7 @@ export default async function Home() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative h-96 w-full flex items-center justify-center rounded-lg shadow-md overflow-hidden bg-background">
               <Image
-                src={founderImageUrl}
+                src="https://i.ibb.co/jv0sCQr1/IMG-20250913-WA0006.jpg"
                 alt="Chlein Joseph Odhiambo, CEO of Serleo Globals"
                 width={400}
                 height={600}
@@ -238,5 +227,4 @@ export default async function Home() {
     </div>
   );
 }
-
     
