@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Handshake, PenSquare, Briefcase, Award, Medal, Gem, Star } from 'lucide-react';
+import { Loader2, Handshake, PenSquare, Briefcase, Gem, Star } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
