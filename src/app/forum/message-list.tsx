@@ -26,7 +26,9 @@ export function MessageList({ initialMessages }: { initialMessages: Message[] })
             const userJson = sessionStorage.getItem('user');
             if (userJson) {
                 const parsedUser = JSON.parse(userJson);
-                setCurrentUser({ id: parsedUser.id });
+                 if (parsedUser?.id) {
+                    setCurrentUser({ id: parsedUser.id });
+                }
             }
         } catch(e) {
             console.error("Failed to parse user from session storage", e);

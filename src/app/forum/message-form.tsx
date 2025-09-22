@@ -32,7 +32,10 @@ export function MessageForm() {
         try {
             const userJson = sessionStorage.getItem('user');
             if (userJson) {
-                setCurrentUser(JSON.parse(userJson));
+                const parsedUser = JSON.parse(userJson);
+                if (parsedUser?._id && parsedUser?.name && parsedUser?.role) {
+                    setCurrentUser(parsedUser);
+                }
             }
         } catch(e) {
             console.error("Failed to parse user from session storage", e);

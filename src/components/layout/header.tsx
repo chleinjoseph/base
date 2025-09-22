@@ -26,11 +26,17 @@ export function Header() {
   useEffect(() => {
     setIsClient(true);
     // Check sessionStorage on client
-    setIsUserLoggedIn(sessionStorage.getItem('userLoggedIn') === 'true');
+    try {
+        setIsUserLoggedIn(sessionStorage.getItem('userLoggedIn') === 'true');
+    } catch (e) {
+        console.error("Could not access session storage:", e);
+        setIsUserLoggedIn(false);
+    }
   }, [pathname]);
 
   const handleLogout = () => {
     sessionStorage.removeItem('userLoggedIn');
+    sessionStorage.removeItem('user');
     setIsUserLoggedIn(false);
     router.push('/');
     router.refresh(); // Forces a re-render to update header state

@@ -2,11 +2,12 @@
 "use client";
 import { useFormStatus } from 'react-dom';
 import { useActionState } from 'react';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Handshake, FileText, Users, MessageSquare, Loader2 } from "lucide-react"
+import { Handshake, FileText, Users, MessageSquare, Loader2, Quote } from "lucide-react"
 import { handleSummarizeContent, getRecentPartnerships, getDashboardStats } from '../actions';
 import { useEffect, useRef, useState } from 'react';
 import { partnershipInquiry } from '@/lib/types';
@@ -84,8 +85,8 @@ export default function AdminPage() {
         )}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="lg:col-span-4">
+       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <Card className="xl:col-span-2">
           <CardHeader>
             <CardTitle>Recent Collaboration Inquiries</CardTitle>
             <CardDescription>The 5 most recent partnership requests.</CardDescription>
@@ -117,8 +118,32 @@ export default function AdminPage() {
             )}
           </CardContent>
         </Card>
-
-        <Card className="lg:col-span-3">
+        <div className="space-y-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Founder's Corner</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center text-center">
+                    <Image
+                        src="https://i.ibb.co/jv0sCQr1/IMG-20250913-WA0006.jpg"
+                        alt="Chlein Joseph Odhiambo"
+                        width={100}
+                        height={100}
+                        className="rounded-full border-4 border-primary/20 mb-4"
+                    />
+                    <h3 className="font-bold">Chlein Joseph Odhiambo</h3>
+                    <p className="text-sm text-muted-foreground">CEO & Founder</p>
+                    <div className="relative p-4 mt-4 bg-background/50 rounded-lg">
+                        <Quote className="absolute -top-2 -left-2 h-8 w-8 text-primary/10" />
+                        <p className="text-sm text-muted-foreground z-10 relative italic">
+                           "Our mission is to build ecosystems of opportunity. Let's continue to inspire and build the future, together."
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+      </div>
+       <Card>
             <CardHeader>
                 <CardTitle>AI Content Summarizer</CardTitle>
                 <CardDescription>Paste content from articles or documents to generate a concise summary.</CardDescription>
@@ -137,7 +162,6 @@ export default function AdminPage() {
                 )}
             </CardContent>
         </Card>
-      </div>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from '@/components/ui/button';
 import { User } from '@/lib/types';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function DashboardPage() {
     const router = useRouter();
@@ -51,17 +52,27 @@ export default function DashboardPage() {
     return (
         <div className="container py-12 md:py-16">
             <Card>
-                <CardHeader>
-                    <CardTitle>Welcome, {user.name}!</CardTitle>
-                    <CardDescription>This is your personal dashboard.</CardDescription>
+                <CardHeader className="text-center pb-4">
+                    <CardTitle className="text-3xl">Welcome to the Serleo Community, {user.name}!</CardTitle>
+                    <CardDescription>We're glad to have you with us on this journey.</CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-col items-center justify-center text-center p-16 space-y-6">
-                    <div className="text-6xl">👤</div>
-                    <h2 className="text-2xl font-bold">Your Journey with Serleo Starts Here</h2>
-                    <p className="text-muted-foreground max-w-md">
-                        Explore our community forum, check out the latest projects, or update your profile. We're glad to have you with us.
-                    </p>
-                    <div className="flex gap-4">
+                <CardContent className="flex flex-col items-center justify-center text-center p-8 md:p-16 space-y-6 bg-secondary/30">
+                    <Image
+                        src="https://i.ibb.co/jv0sCQr1/IMG-20250913-WA0006.jpg"
+                        alt="Chlein Joseph Odhiambo, CEO of Serleo Globals"
+                        width={150}
+                        height={150}
+                        className="rounded-full border-4 border-primary/20 shadow-lg"
+                        data-ai-hint="professional portrait ceo"
+                    />
+                    <div className="max-w-2xl">
+                        <h2 className="text-2xl font-bold font-headline text-primary">A Message From Our Founder</h2>
+                        <p className="text-muted-foreground mt-2 italic">
+                            "Your journey with Serleo starts here. We're building a global ecosystem of impact, and you are now a vital part of it. Explore, connect, and grow with us. Together, we are not just inspiring futures—we are building them."
+                        </p>
+                        <p className="font-semibold mt-2">- Chlein Joseph Odhiambo, CEO</p>
+                    </div>
+                    <div className="flex gap-4 pt-4">
                         <Button asChild>
                             <Link href="/forum">Go to Forum</Link>
                         </Button>
