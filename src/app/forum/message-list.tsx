@@ -5,14 +5,14 @@ import { useEffect, useRef, useState } from 'react';
 import { getMessages } from '@/app/actions';
 import { Message } from '@/lib/types';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { User as UserIcon, Shield } from 'lucide-react';
+import { Shield } from 'lucide-react';
 
-function getInitials(name: string) {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+function getInitials(name: string = '') {
+    return name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
 }
 
 export function MessageList({ initialMessages }: { initialMessages: Message[] }) {
@@ -22,14 +22,14 @@ export function MessageList({ initialMessages }: { initialMessages: Message[] })
 
     // This effect runs on mount to get current user and scroll to bottom
     useEffect(() => {
-        const userJson = sessionStorage.getItem('user');
-        if (userJson) {
-            try {
+        try {
+            const userJson = sessionStorage.getItem('user');
+            if (userJson) {
                 const parsedUser = JSON.parse(userJson);
                 setCurrentUser({ id: parsedUser.id });
-            } catch(e) {
-                console.error("Failed to parse user from session storage", e);
             }
+        } catch(e) {
+            console.error("Failed to parse user from session storage", e);
         }
         
         if (scrollAreaRef.current) {

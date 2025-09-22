@@ -15,29 +15,37 @@ export default function DashboardPage() {
 
     useEffect(() => {
         setIsClient(true);
-        const userJson = sessionStorage.getItem('user');
-        const loggedIn = sessionStorage.getItem('userLoggedIn');
-        if (loggedIn !== 'true' || !userJson) {
-            router.push('/login');
-        } else {
-             try {
-                setUser(JSON.parse(userJson));
-            } catch(e) {
-                console.error("Failed to parse user from session storage", e);
-                sessionStorage.clear();
+        try {
+            const userJson = sessionStorage.getItem('user');
+            const loggedIn = sessionStorage.getItem('userLoggedIn');
+            if (loggedIn !== 'true' || !userJson) {
                 router.push('/login');
+                return;
             }
+            const parsedUser = JSON.parse(userJson);
+            // Basic validation to ensure user object has expected properties
+            if (parsedUser && parsedUser.name && parsedUser.email) {
+                 setUser(parsedUser);
+            } else {
+                throw new Error("Invalid user data in session storage");
+            }
+        } catch(e) {
+            console.error("Failed to parse user from session storage", e);
+            sessionStorage.clear();
+            router.push('/login');
         }
     }, [router]);
 
     const handleLogout = () => {
         sessionStorage.removeItem('userLoggedIn');
         sessionStorage.removeItem('user');
+        setUser(null);
         router.push('/');
     };
 
     if (!isClient || !user) {
-        return null; // Or a loading spinner
+        // You can render a loading spinner here while the client-side check completes
+        return null;
     }
 
     return (

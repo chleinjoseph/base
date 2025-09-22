@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Send, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { User } from '@/lib/types';
+import Link from 'next/link';
 
 function SubmitButton() {
     const { pending } = useFormStatus();
@@ -28,13 +29,13 @@ export function MessageForm() {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
 
     useEffect(() => {
-        const userJson = sessionStorage.getItem('user');
-        if (userJson) {
-            try {
+        try {
+            const userJson = sessionStorage.getItem('user');
+            if (userJson) {
                 setCurrentUser(JSON.parse(userJson));
-            } catch(e) {
-                console.error("Failed to parse user from session storage", e);
             }
+        } catch(e) {
+            console.error("Failed to parse user from session storage", e);
         }
     }, []);
     
@@ -49,7 +50,7 @@ export function MessageForm() {
     if (!currentUser) {
         return (
             <div className="p-4 border-t bg-background text-center text-sm text-muted-foreground">
-                You must be logged in to send messages.
+                You must be logged in to send messages. <Link href="/login" className="font-semibold text-primary underline">Login</Link>
             </div>
         );
     }
@@ -60,9 +61,9 @@ export function MessageForm() {
             action={formAction}
             className="p-4 border-t bg-background flex items-center gap-4"
         >
-            <input type="hidden" name="userId" value={currentUser._id?.toString()} />
-            <input type="hidden" name="userName" value={currentUser.name} />
-            <input type="hidden" name="userRole" value={currentUser.role} />
+            <input type="hidden" name="userId" value={currentUser._id?.toString() ?? ''} />
+            <input type="hidden" name="userName" value={currentUser.name ?? 'Guest'} />
+            <input type="hidden" name="userRole" value={currentUser.role ?? 'user'} />
             <Input
                 name="content"
                 placeholder="Type your message..."

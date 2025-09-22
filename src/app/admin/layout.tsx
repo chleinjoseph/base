@@ -30,13 +30,21 @@ export default function AdminLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<{name: string} | null>(null);
 
   useEffect(() => {
     setIsClient(true);
     const loggedIn = sessionStorage.getItem('adminLoggedIn');
-    if (loggedIn === 'true') {
-      setIsLoggedIn(true);
+    const userJson = sessionStorage.getItem('user');
+
+    if (loggedIn === 'true' && userJson) {
+        try {
+            const parsedUser = JSON.parse(userJson);
+            setUser(parsedUser);
+        } catch (e) {
+            console.error("Failed to parse user data, logging out.", e);
+            handleLogout();
+        }
     } else if (pathname !== '/admin/login' && pathname !== '/admin/signup') {
       router.push('/admin/login');
     }
@@ -44,7 +52,8 @@ export default function AdminLayout({
   
   const handleLogout = () => {
     sessionStorage.removeItem('adminLoggedIn');
-    setIsLoggedIn(false);
+    sessionStorage.removeItem('user');
+    setUser(null);
     router.push('/admin/login');
   };
 
@@ -53,15 +62,9 @@ export default function AdminLayout({
     return <>{children}</>;
   }
   
-  // Don't render anything until client-side check is complete
-  if (!isClient) {
+  // Don't render anything until client-side check is complete and user is verified
+  if (!isClient || !user) {
     return null;
-  }
-  
-  // If not logged in, the effect will have already started the redirect.
-  // Render nothing to avoid a flash of the layout.
-  if (!isLoggedIn) {
-      return null;
   }
 
   return (
@@ -124,10 +127,10 @@ export default function AdminLayout({
         <SidebarFooter className="flex items-center justify-between border-t border-sidebar-border pt-2">
           <div className="flex items-center gap-2">
             <Avatar className="h-8 w-8">
-              <AvatarImage src="https://picsum.photos/40/40" data-ai-hint="person avatar" />
-              <AvatarFallback>CJO</AvatarFallback>
+              <AvatarImage src="https://picsum.photos/seed/admin/40/40" data-ai-hint="person avatar" />
+              <AvatarFallback>{user.name?.charAt(0) || 'A'}</AvatarFallback>
             </Avatar>
-            <span className="text-sm font-semibold">Chlein Joseph Odhiambo</span>
+            <span className="text-sm font-semibold truncate">{user.name}</span>
           </div>
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleLogout}>
             <LogOut className="h-4 w-4" />
