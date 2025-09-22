@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { getPosts } from '@/app/actions';
 import { Post } from '@/lib/types';
 import { Button } from '@/components/ui/button';
@@ -15,19 +15,38 @@ import Link from 'next/link';
 const categories = ['All', 'Business', 'Creativity', 'Wellness', 'Finance', 'Agriventure', 'Events'];
 
 export default function ProjectsPage() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [allPosts, setAllPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     async function loadPosts() {
       setLoading(true);
-      const fetchedPosts = await getPosts({ type: activeCategory });
-      setPosts(fetchedPosts);
+      const fetchedPosts = await getPosts();
+      setAllPosts(fetchedPosts);
       setLoading(false);
     }
     loadPosts();
-  }, [activeCategory]);
+  }, []);
+
+  const filteredPosts = useMemo(() => {
+    return allPosts
+      .filter(post => {
+        // Category filter
+        if (activeCategory === 'All') return true;
+        return post.type.toLowerCase() === activeCategory.toLowerCase();
+      })
+      .filter(post => {
+        // Search term filter
+        if (!searchTerm) return true;
+        const lowercasedTerm = searchTerm.toLowerCase();
+        return (
+          post.title.toLowerCase().includes(lowercasedTerm) ||
+          post.description.toLowerCase().includes(lowercasedTerm)
+        );
+      });
+  }, [allPosts, activeCategory, searchTerm]);
 
   const handleCategoryClick = (category: string) => {
     setActiveCategory(category);
@@ -45,7 +64,12 @@ export default function ProjectsPage() {
       <div className="mt-12 max-w-2xl mx-auto">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-          <Input placeholder="Search projects..." className="pl-10" />
+          <Input 
+            placeholder="Search projects..." 
+            className="pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
         <div className="flex justify-center flex-wrap gap-2 mt-4">
             {categories.map(category => (
@@ -65,14 +89,14 @@ export default function ProjectsPage() {
            <div className="flex justify-center items-center h-40">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
            </div>
-        ) : posts.length === 0 ? (
+        ) : filteredPosts.length === 0 ? (
           <div className="text-center text-muted-foreground py-16">
             <h3 className="text-xl font-semibold">No posts found.</h3>
-            <p>Check back later for new projects and events.</p>
+            <p>Try adjusting your search or category filters.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => (
+            {filteredPosts.map((post) => (
               <Card key={post._id.toString()} className="flex flex-col overflow-hidden hover:shadow-xl transition-shadow duration-300 group bg-card/50 backdrop-blur-sm border-border/50">
                 <CardHeader className="p-0">
                   <div className="relative h-48 w-full overflow-hidden">
