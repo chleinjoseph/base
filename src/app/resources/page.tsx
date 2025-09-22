@@ -8,8 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Search, Loader2, BookOpen } from 'lucide-react';
+import { ArrowRight, Search, Loader2 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
+import { format } from 'date-fns';
 
 const categories = ['All', 'Business', 'Creativity', 'Wellness', 'Finance'];
 
@@ -96,24 +98,23 @@ export default function ResourcesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredResources.map((resource) => (
-              <Card key={resource._id.toString()} className="flex flex-col overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <CardHeader>
-                    <div className='flex justify-between items-start'>
-                        <Badge variant="secondary">{resource.type}</Badge>
-                        <BookOpen className="h-5 w-5 text-muted-foreground" />
+               <Card key={resource._id.toString()} className="group relative flex flex-col overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <Link href={`/resources/${resource._id}`}>
+                    <div className="relative h-56 w-full">
+                        <Image
+                            src={resource.imageUrl}
+                            alt={resource.title}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            data-ai-hint={resource.aiHint}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                     </div>
-                    <CardTitle className="text-xl font-headline pt-4">{resource.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="flex-1">
-                  <p className="text-muted-foreground line-clamp-3">{resource.description}</p>
-                </CardContent>
-                <CardFooter>
-                  <Button asChild variant="secondary" className="w-full">
-                    <Link href={`/resources/${resource._id}`}>
-                      Read More <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </CardFooter>
+                    <div className="absolute bottom-0 left-0 p-6 text-white">
+                        <Badge variant="secondary" className="mb-2 bg-white/20 text-white backdrop-blur-sm border-0">{resource.type}</Badge>
+                        <h3 className="text-xl font-bold font-headline">{resource.title}</h3>
+                    </div>
+                 </Link>
               </Card>
             ))}
           </div>
