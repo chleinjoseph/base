@@ -54,14 +54,14 @@ export default async function ProjectPostPage({ params }: { params: { id: string
                 <div className="prose prose-lg dark:prose-invert max-w-none mx-auto text-foreground">
                     <p className="lead text-xl text-muted-foreground mb-8">{post.description}</p>
                     <p>
-                        This is where the main content of the project or event would go. An administrator can add detailed information, including schedules, objectives, outcomes, and more through the admin dashboard. This allows for rich, dynamic content that keeps the community informed and engaged.
+                        At Serleo Globals, every project is more than just an event; it's a living laboratory for growth, collaboration, and impact. We believe in learning by doing. This initiative was designed to address a specific community need while providing a platform for young innovators to apply their skills in a real-world context. Participants gained hands-on experience, from initial planning and strategy to execution and post-event analysis.
                     </p>
                     <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        Our methodology focuses on sustainable outcomes. We measure success not only by the immediate results of the project but by the long-term empowerment of the individuals involved. Through mentorship from industry experts and peer-to-peer collaboration, we foster an environment where creativity flourishes and leadership skills are forged. This project is a testament to what is possible when passion is paired with purpose and opportunity.
                     </p>
-                     <h3 className="font-headline text-2xl text-primary mt-8 mb-4">A Deeper Dive</h3>
+                     <h3 className="font-headline text-2xl text-primary mt-8 mb-4">Key Takeaways & Future Scope</h3>
                      <p>
-                        Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet.
+                        The insights gathered from this initiative have been invaluable. They inform our future strategies and help us refine our empowerment models. The connections made and the skills developed will continue to ripple throughout the community, creating a lasting legacy of positive change. We are excited to build on this success and continue creating platforms that turn potential into tangible, world-changing action.
                      </p>
                 </div>
             </article>

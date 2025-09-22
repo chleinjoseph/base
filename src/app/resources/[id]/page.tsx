@@ -54,14 +54,14 @@ export default async function ResourcePostPage({ params }: { params: { id: strin
                 <div className="prose prose-lg dark:prose-invert max-w-none mx-auto text-foreground">
                     <p className="lead text-xl text-muted-foreground mb-8">{post.description}</p>
                     <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        The journey from a fleeting idea to a tangible, impactful venture is one of the most challenging yet rewarding paths an individual can take. At Serleo Globals, we champion the spirit of innovation and provide the tools to navigate this journey. This article delves into the core principles that can transform a simple concept into a successful enterprise. It’s about more than just business plans and funding; it’s about mindset, resilience, and the courage to begin.
                     </p>
                     <p>
-                        Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi.
+                        We explore practical strategies for validating your ideas, understanding your target audience, and building a minimum viable product (MVP). These steps are crucial in minimizing risk and maximizing your chances of success. By adopting a lean approach, you can learn, iterate, and adapt quickly, ensuring that your final product truly meets a market need. Every failure is a lesson, and every pivot is a step closer to a breakthrough.
                     </p>
-                     <h3 className="font-headline text-2xl text-primary mt-8 mb-4">A Deeper Dive</h3>
+                     <h3 className="font-headline text-2xl text-primary mt-8 mb-4">A Deeper Dive into Execution</h3>
                      <p>
-                        Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet.
+                        Beyond the initial stages, effective execution is what separates a dream from a reality. This involves building a strong team, fostering a culture of excellence, and mastering the art of storytelling to connect with customers and investors. We believe that every young person possesses the potential to create something extraordinary. Our goal is to unlock that potential and provide a roadmap for turning ambitious visions into a powerful, lasting impact.
                      </p>
                 </div>
             </article>
