@@ -41,10 +41,14 @@ export default async function ResourcePostPage({ params }: { params: { id: strin
                     </h1>
                 </div>
 
-                <Card className="relative h-96 w-full mb-12 rounded-lg overflow-hidden shadow-lg bg-secondary">
-                    <div className="flex items-center justify-center h-full">
-                        <BookOpen className="h-32 w-32 text-primary/10" />
-                    </div>
+                 <Card className="relative h-96 w-full mb-12 rounded-lg overflow-hidden shadow-lg bg-secondary">
+                   <Image
+                      src={post.imageUrl}
+                      alt={post.title}
+                      fill
+                      objectFit="cover"
+                      data-ai-hint={post.aiHint}
+                    />
                 </Card>
 
                 <div className="prose prose-lg dark:prose-invert max-w-none mx-auto text-foreground">
